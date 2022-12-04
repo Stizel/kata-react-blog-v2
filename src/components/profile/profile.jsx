@@ -1,11 +1,7 @@
 import React from 'react';
 import profile from "./profile.module.scss";
-import {useForm} from "react-hook-form";
 
 const Profile = () => {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
-  const onSubmit = data => console.log(data);
-  console.log(watch("example"));
   return (
     <div className={profile.page}>
       <form className={profile.form}>

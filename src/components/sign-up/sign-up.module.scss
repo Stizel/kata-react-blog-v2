@@ -127,3 +127,14 @@
   color: $btn-blue
 }
 
+.inputError{
+  outline:1px solid $error;
+}
+
+.error{
+  nt-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  margin: 0;
+  color: $error;
+}

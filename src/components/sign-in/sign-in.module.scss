@@ -68,11 +68,11 @@
   color: $grey-9;
   border: 1px solid $grey-5;
   border-radius: 4px;
-
   &::placeholder {
     color: $grey-6;
   }
 }
+
 
 .submit {
   color: $white;
@@ -102,5 +102,17 @@
 .signUp {
   text-decoration: none;
   color: $btn-blue
+}
+
+.inputError{
+  outline:1px solid $error;
+}
+
+.error{
+  nt-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  margin: 0;
+  color: $error;
 }
 
