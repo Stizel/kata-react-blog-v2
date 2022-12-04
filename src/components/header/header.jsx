@@ -5,10 +5,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {toggleLogin} from "../../store/status-slice";
 import {Link} from "react-router-dom";
 
-const btn = classNames(header['btn']);
-const signUp = classNames(btn, header.signUp);
-const createArticle = classNames(btn, header["create-article"]);
-const logOut = classNames(btn, header['log-out']);
+const link = classNames(header['link']);
+const signUp = classNames(link, header.signUp);
+const createArticle = classNames(link, header["create-article"]);
+const logOut = classNames(link, header['log-out']);
 
 
 const Header = () => {
@@ -21,22 +21,26 @@ const Header = () => {
   const headerAuthorization = (
     <ul className={header.authorization}>
       <li>
-        <button className={btn} type="button" onClick={() => dispatch(toggleLogin())}>Sign In</button>
+        <Link className={link} onClick={() => dispatch(toggleLogin())} to="/sign-in">
+          Sign In
+        </Link>
       </li>
       <li>
-        <button className={signUp} type="button">Sign Up</button>
+        <Link className={signUp} to="/sign-up">
+          Sign Up
+        </Link>
       </li>
     </ul>
   );
 
   const headerMenu = (
     <div className={header.menu}>
-      <button type="button" className={createArticle}>Create article</button>
-      <div className={header.user}>
+      <Link to='/create-article' className={createArticle}>Create article</Link>
+      <Link to='/profile' className={header.user}>
         <span className={header["user__name"]}>John Doe</span>
-        <img className={header["user__avatar"]} src="/avatar.png" alt='avatar'/>
-      </div>
-      <button type="button" className={logOut} onClick={() => dispatch(toggleLogin())}>Log Out</button>
+        <img className={header["user__avatar"]} src="/avatar.png" alt="avatar"/>
+      </Link>
+      <Link to='/' className={logOut} onClick={() => dispatch(toggleLogin())}>Log Out</Link>
     </div>
   );
 

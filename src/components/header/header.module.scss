@@ -1,6 +1,7 @@
 @import '../../vars';
 
 .main {
+  border: 1px transparent solid;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -27,8 +28,9 @@
   gap: 19px;
 }
 
-.btn {
-  background-color: transparent;
+.link {
+  text-decoration: none;
+  color: $black85;
   font-size: 18px;
   line-height: 28px;
   padding: 12px 18px;
@@ -63,6 +65,7 @@
 }
 
 .user {
+  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 13px;
@@ -76,6 +79,12 @@
   padding: 6px 10px;
   border: 1px $btn-green solid;
   border-radius: 5px;
+  &:hover {
+    background-color: $btn-green;
+    color: $white;
+    border: 1px $btn-green solid;
+    transition: 0.5s;
+  }
 }
 
 .log-out{
@@ -83,6 +92,7 @@
   border: 1px $black75 solid;
   margin-right: 22px;
   &:hover {
+    border: 1px $black75 solid;
     background-color: $black75;
     color: $white;
     transition: 0.5s;

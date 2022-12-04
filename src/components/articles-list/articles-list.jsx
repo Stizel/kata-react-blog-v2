@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {Alert, Pagination, Spin} from "antd";
-import {Offline, Online} from 'react-detect-offline';
 import articlesStyl from './articles-list.module.scss';
 import {useDispatch, useSelector} from "react-redux";
 
@@ -47,6 +46,14 @@ const ArticlesList = () => {
           type="error"
           showIcon
         />);
+      case 'offline':
+        return (<Alert
+          className={articlesStyl.error}
+          message="У вас нет интернет соединения!"
+          description="Пожалуйста проверьте ваш кабель"
+          type="error"
+          showIcon
+        />);
       default:
         return articles;
     }
@@ -60,17 +67,8 @@ const ArticlesList = () => {
     dispatch(setLimit(limit));
   };
 
-  return (<div className={articlesStyl.main}>
-    <Offline>
-      <Alert
-        className={articlesStyl.error}
-        message="У вас нет интернет соединения!"
-        description="Пожалуйста проверьте ваш кабель"
-        type="error"
-        showIcon
-      />
-    </Offline>
-    <Online>
+  return (
+    <div className={articlesStyl.main}>
       <ul className={articlesStyl.list}>{content}</ul>
       {status !== 'error' && <Pagination
         className={articlesStyl.pag}
@@ -81,8 +79,8 @@ const ArticlesList = () => {
         total={articlesCount}
         onChange={(page, pageSize) => onPaginationChange(page, pageSize)}
       />}
-    </Online>
-  </div>);
+    </div>
+  );
 };
 
 export default ArticlesList;

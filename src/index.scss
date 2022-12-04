@@ -1,3 +1,8 @@
 .ant-alert-error, .ant-alert-warning{
   margin-top:30vh !important;
 }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}

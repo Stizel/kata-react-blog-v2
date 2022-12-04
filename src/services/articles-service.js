@@ -1,7 +1,6 @@
 import axios from "axios";
 import {addArticles, addArticlesCount, setArticle} from "../store/article-slice";
 import {setStatus} from "../store/status-slice";
-import React from "react";
 import {format} from "date-fns";
 
 

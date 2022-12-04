@@ -1,9 +1,12 @@
 import './app.module.scss';
 import ArticlesList from "../articles-list/articles-list";
 import {Route, Routes} from "react-router-dom";
-import ArticlePage from "../ArticlePage/article-page";
+import ArticlePage from "../article-page/article-page";
 import {NotFoundPage} from "../not-found-page/not-found-page";
 import {Layout} from "../Layout/Layout";
+import SignUp from "../sign-up/sign-up";
+import SignIn from "../sign-in/sign-in";
+import Profile from "../profile/profile";
 
 function App() {
   return (
@@ -13,6 +16,9 @@ function App() {
           <Route index element={<ArticlesList/>}/>
           <Route path='/articles' element={<ArticlesList/>}/>
           <Route path="/articles/:slug" element={<ArticlePage/>}/>
+          <Route path="/sign-in" element={<SignIn/>}/>
+          <Route path="/sign-up" element={<SignUp/>}/>
+          <Route path="/profile" element={<Profile/>}/>
           <Route path="*" element={<NotFoundPage/>}/>
         </Route>
       </Routes>

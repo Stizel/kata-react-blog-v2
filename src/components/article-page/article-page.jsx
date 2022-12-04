@@ -19,7 +19,7 @@ console.log(article)
     dispatch(setLocation('article-page'));
     dispatch(setStatus('loading'));
     dispatch(fetchArticle(slug))
-  }, []);
+  }, [dispatch,slug]);
 
 
 const articleExist = Object.keys(article).length !==0
