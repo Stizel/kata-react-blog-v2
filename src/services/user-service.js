@@ -23,14 +23,11 @@ export const registerUser = (data) => async (dispatch) => {
   })
     .then((res) => res.data)
     .then((data) => {
-      console.log('register if no error', data.user);
       dispatch(getUser(data.user.token));
       dispatch(setErrors(null));
     })
     .catch((err) => {
-      console.log(err);
       if (err?.response?.status === 422) {
-        console.log("if error:", JSON.parse(user));
         dispatch(setUser(JSON.parse(user)));
         dispatch(setErrors(err.response.data.errors));
       }
@@ -47,15 +44,11 @@ export const loginUser = (data) => async (dispatch) => {
   })
     .then((res) => res.data)
     .then((data) => {
-      console.log('if no error', data.user);
       dispatch(getUser(data.user.token));
       dispatch(setErrors(null));
-      localStorage.setItem('token', data.user.token);
     })
     .catch((err) => {
-      console.log("if error login user:", err);
       if (err.response.status === 422) {
-        console.log("if error login user:", JSON.parse(user), err.response.data.errors);
         dispatch(setUser(JSON.parse(user)));
         dispatch(setErrors(err.response.data.errors));
       }
@@ -75,10 +68,8 @@ export const getUser = (token) => async (dispatch) => {
   })
     .then((res) => res.data)
     .then((data) => {
-      console.log(data.user)
       dispatch(setUser({user: data.user}));
       dispatch(setErrors(null));
-      localStorage.setItem('token', data.user.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       dispatch(goHome(true));
     })
@@ -88,13 +79,13 @@ export const getUser = (token) => async (dispatch) => {
 };
 
 export const updateUser = (data) => async (dispatch) => {
-  console.log(data)
-  const token = localStorage.getItem('token');
+
+  const token = JSON.parse(localStorage.getItem('user')).token
 
   const user = JSON.stringify({
     user: data
   });
-  console.log('from update', user);
+
 
   axios({
     url: `${baseUrl}/user`,
@@ -109,10 +100,8 @@ export const updateUser = (data) => async (dispatch) => {
   })
     .then((res) => res.data)
     .then((data) => {
-      console.log('from update ok ',data.user)
       dispatch(getUser(data.user.token));
       dispatch(setErrors(null));
-      localStorage.setItem('token', data.user.token);
     })
     .catch((err) => {
       dispatch(setErrors(err.response.data.errors));

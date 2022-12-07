@@ -15,21 +15,20 @@ const logOutBtn = classNames(link, header['log-out']);
 const Header = () => {
 
   const dispatch = useDispatch();
-const token = useSelector(state => state.user.user.token);
+  const token = useSelector(state => state.user.user.token);
   const user = useSelector(state => state.user.user);
-const avatar = user.image ? user.image : '/avatar.png'
+  const avatar = user.image ? user.image : '/avatar.png';
 
-  const onLogOut = ()=>{
-    localStorage.setItem('token','')
+  const onLogOut = () => {
+    localStorage.removeItem('user');
     dispatch(logOut());
-  }
+  };
 
   useEffect(() => {
-    console.log(token)
     if (token) {
       dispatch(getUser(token));
     }
-  }, [token,dispatch]);
+  }, [token, dispatch]);
 
 
   const headerAuthorization = (

@@ -3,7 +3,15 @@ import {createSlice} from "@reduxjs/toolkit";
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    user: JSON.parse(localStorage.getItem('user')),
+    user: JSON.parse(localStorage.getItem('user'))
+      ? JSON.parse(localStorage.getItem('user')) : {
+        image: '',
+        bio: '',
+        token: '',
+        username: '',
+        email: '',
+        password: ''
+      },
     errors: null,
     home: false,
   },
@@ -32,4 +40,4 @@ const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
-export const {setUser, setErrors, logOut,goHome} = userSlice.actions;
+export const {setUser, setErrors, logOut, goHome} = userSlice.actions;
