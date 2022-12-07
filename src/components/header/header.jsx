@@ -1,27 +1,41 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import header from './header.module.scss';
 import classNames from "classnames";
 import {useDispatch, useSelector} from "react-redux";
-import {toggleLogin} from "../../store/status-slice";
 import {Link} from "react-router-dom";
+import {logOut} from "../../store/user-slice";
+import {getUser} from "../../services/user-service";
 
 const link = classNames(header['link']);
 const signUp = classNames(link, header.signUp);
 const createArticle = classNames(link, header["create-article"]);
-const logOut = classNames(link, header['log-out']);
+const logOutBtn = classNames(link, header['log-out']);
 
 
 const Header = () => {
 
   const dispatch = useDispatch();
+const token = useSelector(state => state.user.user.token);
+  const user = useSelector(state => state.user.user);
+const avatar = user.image ? user.image : '/avatar.png'
 
-  const login = useSelector(state => state.status.login);
+  const onLogOut = ()=>{
+    localStorage.setItem('token','')
+    dispatch(logOut());
+  }
+
+  useEffect(() => {
+    console.log(token)
+    if (token) {
+      dispatch(getUser(token));
+    }
+  }, [token,dispatch]);
 
 
   const headerAuthorization = (
     <ul className={header.authorization}>
       <li>
-        <Link className={link} onClick={() => dispatch(toggleLogin())} to="/sign-in">
+        <Link className={link} to="/sign-in">
           Sign In
         </Link>
       </li>
@@ -35,19 +49,19 @@ const Header = () => {
 
   const headerMenu = (
     <div className={header.menu}>
-      <Link to='/create-article' className={createArticle}>Create article</Link>
-      <Link to='/profile' className={header.user}>
-        <span className={header["user__name"]}>John Doe</span>
-        <img className={header["user__avatar"]} src="/avatar.png" alt="avatar"/>
+      <Link to="/create-article" className={createArticle}>Create article</Link>
+      <Link to="/profile" className={header.user}>
+        <span className={header["user__name"]}>{user.username}</span>
+        <img className={header["user__avatar"]} src={avatar} alt="avatar"/>
       </Link>
-      <Link to='/' className={logOut} onClick={() => dispatch(toggleLogin())}>Log Out</Link>
+      <Link to="/" className={logOutBtn} onClick={() => onLogOut()}>Log Out</Link>
     </div>
   );
 
   return (
     <div className={header.main}>
       <Link to="/articles" className={header.label}>Realworld Blog</Link>
-      {login ? headerMenu : headerAuthorization}
+      {token ? headerMenu : headerAuthorization}
     </div>
   );
 };

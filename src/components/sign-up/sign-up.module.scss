@@ -13,7 +13,6 @@
   margin: 59px auto;
   padding: 48px 32px;
   width: 384px;
-  max-height: 599px;
   background-color: $white;
   display: flex;
   flex-direction: column;
@@ -127,12 +126,8 @@
   color: $btn-blue
 }
 
-.inputError{
-  outline:1px solid $error;
-}
-
 .error{
-  nt-weight: 400;
+  font-weight: 400;
   font-size: 14px;
   line-height: 22px;
   margin: 0;

@@ -4,7 +4,7 @@ import {setStatus} from "../store/status-slice";
 import {format} from "date-fns";
 
 
-const baseUrl = 'https://blog.kata.academy';
+const baseUrl = 'https://blog.kata.academy/api';
 const tagQuery = '';
 const tag = tagQuery ? `&tag=${tagQuery}` : '';
 const authorQuery = '';
@@ -12,19 +12,9 @@ const author = authorQuery ? `&author=${authorQuery}` : '';
 const favQuery = '';
 const favorited = favQuery ? `&favorited=${favQuery}` : '';
 
-const getArticleItems = (articles) => articles.map((article) => {
-  return {
-    slug: article.slug,
-    headerTitle: strCut(article.title, 40),
-    title: article.title,
-    likes: article.favoritesCount,
-    tags: article.tagList,
-    description: article.description,
-    username: article.author.username,
-    updatedDate: format(new Date(article.updatedAt), "MMMM d, yyyy"),
-    avatarPath: article.author.image,
-  };
-});
+const getArticleItems = (articles) =>
+  articles.map((article) =>
+    getArticleItem(article));
 
 const getArticleItem = (article) => {
   return {
@@ -43,7 +33,7 @@ const getArticleItem = (article) => {
 
 
 export const fetchArticles = (page, limit) => async (dispatch) => {
-  axios(`${baseUrl}/api/articles?${tag}${author}${favorited}&limit=${limit}&offset=${(page - 1) * limit}`)
+  axios(`${baseUrl}/articles?${tag}${author}${favorited}&limit=${limit}&offset=${(page - 1) * limit}`)
     .then((res) => res.data)
     .then((data) => {
       if (data.articles.length !== 0) {
@@ -73,10 +63,10 @@ export const fetchArticles = (page, limit) => async (dispatch) => {
 
 
 export const fetchArticle = (slug) => async (dispatch) => {
-  axios(`${baseUrl}/api/articles/${slug}`)
+  axios(`${baseUrl}/articles/${slug}`)
     .then((res) => res.data)
     .then((data) => {
-      console.log(data.article)
+      console.log(data.article);
       dispatch(setArticle(getArticleItem(data.article)));
       dispatch(setStatus('ok'));
     });
@@ -101,4 +91,7 @@ export const strCut = (str = "", length) => {
   }
   return `${shortDesc}...`;
 };
+
+
+
 

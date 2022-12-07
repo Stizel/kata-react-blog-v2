@@ -9,6 +9,7 @@ import {fetchArticles} from "../../services/articles-service";
 import {setLimit, setPage} from "../../store/article-slice";
 import {setLocation, setStatus} from "../../store/status-slice";
 import ArticleCard from "../article-card/article-card";
+import {goHome} from "../../store/user-slice";
 
 
 const ArticlesList = () => {
@@ -18,10 +19,11 @@ const ArticlesList = () => {
   const status = useSelector(state => state.status.status);
 
   useEffect(() => {
+    dispatch(goHome(false))
     dispatch(setLocation('articles-list'));
     dispatch(setStatus('loading'));
     dispatch(fetchArticles(page, limit));
-  }, [page, limit]);
+  }, [page, limit,dispatch]);
 
 
   const articles = articlesList.map(article => {
