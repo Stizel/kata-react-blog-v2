@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import {logOut} from "../../store/user-slice";
 import {getUser} from "../../services/user-service";
+import {setArticle} from "../../store/article-slice";
 
 const link = classNames(header['link']);
 const signUp = classNames(link, header.signUp);
@@ -15,9 +16,9 @@ const logOutBtn = classNames(link, header['log-out']);
 const Header = () => {
 
   const dispatch = useDispatch();
-  const token = useSelector(state => state.user.user.token);
-  const user = useSelector(state => state.user.user);
-  const avatar = user.image ? user.image : '/avatar.png';
+  const {user} = useSelector(state => state.user);
+  const {token} = user
+  const avatar = user.image ? user.image : 'https://static.productionready.io/images/smiley-cyrus.jpg';
 
   const onLogOut = () => {
     localStorage.removeItem('user');
@@ -48,7 +49,7 @@ const Header = () => {
 
   const headerMenu = (
     <div className={header.menu}>
-      <Link to="/create-article" className={createArticle}>Create article</Link>
+      <Link to="/new-article" onClick={setArticle({})} className={createArticle}>Create article</Link>
       <Link to="/profile" className={header.user}>
         <span className={header["user__name"]}>{user.username}</span>
         <img className={header["user__avatar"]} src={avatar} alt="avatar"/>

@@ -25,6 +25,7 @@ export const registerUser = (data) => async (dispatch) => {
     .then((data) => {
       dispatch(getUser(data.user.token));
       dispatch(setErrors(null));
+      dispatch(goHome(true));
     })
     .catch((err) => {
       if (err?.response?.status === 422) {
@@ -46,6 +47,7 @@ export const loginUser = (data) => async (dispatch) => {
     .then((data) => {
       dispatch(getUser(data.user.token));
       dispatch(setErrors(null));
+      dispatch(goHome(true));
     })
     .catch((err) => {
       if (err.response.status === 422) {
@@ -71,7 +73,6 @@ export const getUser = (token) => async (dispatch) => {
       dispatch(setUser({user: data.user}));
       dispatch(setErrors(null));
       localStorage.setItem('user', JSON.stringify(data.user));
-      dispatch(goHome(true));
     })
     .catch((err) => {
       dispatch(setErrors(err.response.data.errors));

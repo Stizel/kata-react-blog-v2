@@ -4,7 +4,7 @@ const articlesSlice = createSlice({
   name: "article",
   initialState: {
     articlesList: [],
-    article:{},
+    article: {},
     articlesCount: 0,
     page: 1,
     limit: 5,
@@ -25,11 +25,18 @@ const articlesSlice = createSlice({
     setArticle(state, action) {
       state.article = action.payload;
     },
+
   }
 });
 
 export default articlesSlice.reducer;
-export const {addArticles, addArticlesCount, setPage, setLimit,setArticle} = articlesSlice.actions;
+export const {
+  addArticles,
+  addArticlesCount,
+  setPage,
+  setLimit,
+  setArticle,
+} = articlesSlice.actions;
 
 
 

@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {updateUser} from "../../services/user-service";
 import signUp from "../sign-up/sign-up.module.scss";
 
+
 const Profile = () => {
 
   const {register, formState: {errors}, handleSubmit} = useForm();
@@ -14,6 +15,7 @@ const Profile = () => {
   const dispatch = useDispatch();
   const servErr = useSelector(state => state.user.errors);
   const onSubmit = data => dispatch(updateUser(data));
+console.log(user)
 
   return (
     <div className={profile.page}>
@@ -103,7 +105,8 @@ const Profile = () => {
               type="text"
               id="avatar"
               placeholder="Avatar image"
-              style={errors.avatar && {outline: "1px solid #F5222D"}}
+              defaultValue={user.image}
+              style={errors.image && {outline: "1px solid #F5222D"}}
               {...register("image", {
                 pattern: {
                   value: /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u00a1-\uffff][a-z0-9\u00a1-\uffff_-]{0,62})?[a-z0-9\u00a1-\uffff]\.)+(?:[a-z\u00a1-\uffff]{2,}\.?))(?::\d{2,5})?(?:[/?#]\S*)?$/i,
@@ -111,8 +114,8 @@ const Profile = () => {
                 }
               })}
             />
-            {errors.avatar &&
-              <p className={profile.error}>{errors.avatar.message}</p>}
+            {errors.image &&
+              <p className={profile.error}>{errors.image.message}</p>}
           </li>
         </ul>
 
