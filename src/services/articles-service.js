@@ -1,5 +1,5 @@
 import axios from "axios";
-import {addArticles, addArticlesCount, setArticle} from "../store/article-slice";
+import {addArticles, addArticlesCount, setArticle, setLiked} from "../store/article-slice";
 import {setStatus} from "../store/status-slice";
 import {format} from "date-fns";
 import {goHome} from "../store/user-slice";
@@ -18,7 +18,6 @@ const getArticleItems = (articles) =>
     getArticleItem(article));
 
 const getArticleItem = (article) => {
-  console.log(article)
   return {
     slug: article.slug,
     title: article.title,
@@ -26,6 +25,7 @@ const getArticleItem = (article) => {
     likes: article.favoritesCount,
     tags: article.tagList,
     text: article.body.trim(),
+    liked: article.favorited,
     description: article.description,
     username: article.author.username,
     updatedDate: format(new Date(article.updatedAt), "MMMM d, yyyy"),
@@ -34,21 +34,32 @@ const getArticleItem = (article) => {
 };
 
 
-export const fetchArticles = (page, limit) => async (dispatch) => {
-  axios(`${baseUrl}/articles?${tag}${author}${favorited}&limit=${limit}&offset=${(page - 1) * limit}`)
+export const fetchArticles = (page, limit,token='') => async (dispatch) => {
+  axios(
+    {
+      url:`${baseUrl}/articles?${tag}${author}${favorited}&limit=${limit}&offset=${(page - 1) * limit}`,
+      method:'get',
+      headers:
+        {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+    }
+    )
     .then((res) => res.data)
     .then((data) => {
       if (data.articles.length !== 0) {
-        console.log("newArt>", getArticleItems(data.articles));
         dispatch(addArticles(getArticleItems(data.articles)));
         dispatch(addArticlesCount(data.articlesCount));
         dispatch(setStatus('ok'));
+
       } else {
         dispatch(setStatus('404'));
       }
     })
     .catch((err) => {
-      console.log("err Code>", err.code, err);
+
       switch (err.code) {
         case "ERR_BAD_REQUEST":
           dispatch(setStatus('404'));
@@ -64,11 +75,20 @@ export const fetchArticles = (page, limit) => async (dispatch) => {
 };
 
 
-export const fetchArticle = (slug) => async (dispatch) => {
-  axios(`${baseUrl}/articles/${slug}`)
+export const fetchArticle = (slug,token='') => async (dispatch) => {
+  axios({url:`${baseUrl}/articles/${slug}`,
+  method:'get',
+      headers:
+        {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+    }
+  )
     .then((res) => res.data)
     .then((data) => {
-      console.log(data.article);
+
       dispatch(setArticle(getArticleItem(data.article)));
       dispatch(setStatus('ok'));
     });
@@ -109,12 +129,11 @@ export const postNewArticle = (data, tags, token) => async (dispatch) => {
   })
     .then((res) => res.data)
     .then((data) => {
-      console.log(data);
+
       dispatch(setStatus('ok'));
       dispatch(goHome(true));
     })
     .catch((err) => {
-      console.log("err Code>", err.code, err);
       switch (err.code) {
         case "ERR_BAD_REQUEST":
           dispatch(setStatus('404'));
@@ -123,8 +142,6 @@ export const postNewArticle = (data, tags, token) => async (dispatch) => {
           dispatch(setStatus('error'));
           break;
         case "ERR_BAD_RESPONSE":
-          console.log(article)
-          console.log(err.response.data)
           dispatch(setStatus('error'));
           break;
         default:
@@ -135,7 +152,7 @@ export const postNewArticle = (data, tags, token) => async (dispatch) => {
 };
 
 
-export const editArticle = (data, tags, token,slug) => async (dispatch) => {
+export const editArticle = (data, tags, token, slug) => async (dispatch) => {
 
   const article = JSON.stringify({
     article: {
@@ -157,12 +174,10 @@ export const editArticle = (data, tags, token,slug) => async (dispatch) => {
   })
     .then((res) => res.data)
     .then((data) => {
-      console.log(data);
       dispatch(setStatus('ok'));
       dispatch(goHome(true));
     })
     .catch((err) => {
-      console.log("err Code>", err.code, err);
       switch (err.code) {
         case "ERR_BAD_REQUEST":
           dispatch(setStatus('404'));
@@ -171,8 +186,6 @@ export const editArticle = (data, tags, token,slug) => async (dispatch) => {
           dispatch(setStatus('error'));
           break;
         case "ERR_BAD_RESPONSE":
-          console.log(article)
-          console.log(err.response.data)
           dispatch(setStatus('error'));
           break;
         default:
@@ -182,7 +195,7 @@ export const editArticle = (data, tags, token,slug) => async (dispatch) => {
     });
 };
 
-export const deleteArticle = (token,slug) => async (dispatch) => {
+export const deleteArticle = (token, slug) => async (dispatch) => {
   axios({
     url: `${baseUrl}/articles/${slug}`,
     method: "delete",
@@ -195,12 +208,10 @@ export const deleteArticle = (token,slug) => async (dispatch) => {
   })
     .then((res) => res.data)
     .then((data) => {
-      console.log(data);
       dispatch(setStatus('ok'));
       dispatch(goHome(true));
     })
     .catch((err) => {
-      console.log("err Code>", err.code, err);
       switch (err.code) {
         case "ERR_BAD_REQUEST":
           dispatch(setStatus('404'));
@@ -209,7 +220,74 @@ export const deleteArticle = (token,slug) => async (dispatch) => {
           dispatch(setStatus('error'));
           break;
         case "ERR_BAD_RESPONSE":
-          console.log(err.response.data)
+          dispatch(setStatus('error'));
+          break;
+        default:
+          dispatch(setStatus('error'));
+          break;
+      }
+    });
+};
+
+export const setLike = (token, slug) => async (dispatch) => {
+  axios({
+    url: `${baseUrl}/articles/${slug}/favorite`,
+    method: "post",
+    headers:
+      {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+  })
+    .then((res) => res.data)
+    .then((data) => {
+      dispatch(setStatus('ok'));
+      dispatch(setLiked(getArticleItem(data.article)))
+    })
+    .catch((err) => {
+      switch (err.code) {
+        case "ERR_BAD_REQUEST":
+          dispatch(setStatus('404'));
+          break;
+        case "ERR_NETWORK":
+          dispatch(setStatus('error'));
+          break;
+        case "ERR_BAD_RESPONSE":
+          dispatch(setStatus('error'));
+          break;
+        default:
+          dispatch(setStatus('error'));
+          break;
+      }
+    });
+};
+
+export const removeLike = (token, slug) => async (dispatch) => {
+  axios({
+    url: `${baseUrl}/articles/${slug}/favorite`,
+    method: "delete",
+    headers:
+      {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+  })
+    .then((res) => res.data)
+    .then((data) => {
+      dispatch(setStatus('ok'));
+      dispatch(setLiked(getArticleItem(data.article)))
+    })
+    .catch((err) => {
+      switch (err.code) {
+        case "ERR_BAD_REQUEST":
+          dispatch(setStatus('404'));
+          break;
+        case "ERR_NETWORK":
+          dispatch(setStatus('error'));
+          break;
+        case "ERR_BAD_RESPONSE":
           dispatch(setStatus('error'));
           break;
         default:

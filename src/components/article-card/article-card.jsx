@@ -6,7 +6,8 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {v4 as uuidv4} from "uuid";
 import classNames from "classnames";
-import {deleteArticle} from "../../services/articles-service";
+import {deleteArticle, fetchArticle, fetchArticles, removeLike, setLike} from "../../services/articles-service";
+import {setStatus} from "../../store/status-slice";
 
 
 const ArticleCard = ({article}) => {
@@ -29,13 +30,15 @@ const ArticleCard = ({article}) => {
   const [loading, setLoading] = useState(true);
   const title = article.title.length < 1 ? 'NO TITLED ARTICLE' : article.title;
   const articlePath = `/articles/${article.slug}`;
-
+  const {page, limit} = useSelector(state => state.articles);
 
   useEffect(() => {
     setAvatar(article.avatarPath);
+
   }, [article.avatarPath]);
 
   const printTags = (article) => {
+    console.log(article)
     return article.tags.map(tag => {
       const tagStr = String(tag);
       if (tagStr.length > 20 || tagStr.length < 1) return null;
@@ -46,12 +49,28 @@ const ArticleCard = ({article}) => {
     });
   };
 
+const onLike=()=>{
+  console.log(location)
+  if (article.liked) {
+    dispatch(removeLike(token, article.slug));
+    location==="article-page" && dispatch(fetchArticle(article.slug,token));
+    location==="articles-list" && dispatch(fetchArticles(page,limit,token));
+  } else {
+    dispatch(setLike(token, article.slug,article.liked));
+    location==="article-page" && dispatch(fetchArticle(article.slug,token));
+    location==="articles-list" && dispatch(fetchArticles(page,limit,token));
+  }
+}
+
 
   const onDelete = () => {
     dispatch(deleteArticle(token, slug));
-    navigate('/')
+    navigate('/');
   };
-
+const likeStyl = classNames(
+  articleCard.blackLike,
+  article.liked && articleCard.redLike
+)
 
   const editLink = `/articles/${slug}/edit`;
   const deleteBtn = classNames(articleCard.btn, articleCard.delete);
@@ -64,9 +83,9 @@ const ArticleCard = ({article}) => {
         <section className={articleCard.content}>
           <div className={articleCard.titleWrapper}>
             <Link to={articlePath} className={titleStyle}>{title}</Link>
-            <span className={articleCard.likes}>
+            <button onClick={()=>onLike()} className={likeStyl}>
               {article.likes}
-            </span>
+            </button>
           </div>
           <ul className={articleCard.tags}>{printTags(article)}</ul>
           <p className={articleCard.description}>{article.description}</p>

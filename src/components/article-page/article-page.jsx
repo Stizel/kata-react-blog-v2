@@ -11,14 +11,14 @@ import {setLocation, setStatus} from "../../store/status-slice";
 const ArticlePage = () => {
   const {slug} = useParams();
   const dispatch = useDispatch()
-
+const {token} = useSelector(state => state.user.user)
 
   const {article} = useSelector(state => state.articles)
 console.log(article)
   useEffect(() => {
     dispatch(setLocation('article-page'));
     dispatch(setStatus('loading'));
-    dispatch(fetchArticle(slug))
+    dispatch(fetchArticle(slug,token))
   }, [dispatch,slug]);
 
 

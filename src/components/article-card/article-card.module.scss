@@ -1,7 +1,7 @@
 @import "../../vars";
 
 
-.cardWrapper{
+.cardWrapper {
   padding: 15px 20px;
   border: 1px transparent solid;
   background-color: $white;
@@ -15,7 +15,7 @@
   justify-content: space-between;
 }
 
-.singleCard{
+.singleCard {
   height: fit-content;
 }
 
@@ -24,7 +24,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 6px;
-  max-width:682px;
+  max-width: 682px;
 }
 
 .titleWrapper {
@@ -41,13 +41,17 @@
   color: $text-blue;
   max-width: 650px;
 }
-.titleFull{
+
+.titleFull {
   height: fit-content;
   overflow: hidden;
   max-width: 650px;
 }
 
-.likes {
+.blackLike {
+  padding: 0;
+  background-color: transparent;
+  border: none;
   color: $black75;
   display: flex;
   align-items: center;
@@ -55,18 +59,30 @@
   line-height: 22px;
 
   &:before {
+    content: url('./like.svg');
     margin-top: 4px;
-    content: url('like.svg');
     margin-right: 5px;
+  }
+
+  &:hover {
+    &:before {
+      content: url('./red-like.svg');
+    }
   }
 }
 
-.tags{
+.redLike {
+  &:before {
+    content: url('./red-like.svg');
+  }
+}
+
+.tags {
   margin: 0;
   padding: 0;
   list-style: none;
   display: flex;
-  gap:8px;
+  gap: 8px;
 }
 
 .tag {
@@ -76,20 +92,21 @@
   padding: 2px;
   border: 1px solid $black75;
   border-radius: 2px;
-  &:hover{
+
+  &:hover {
     cursor: pointer;
     color: $black50;
     border: 1px solid $black50;
   }
 }
 
-.description{
-  margin:0;
+.description {
+  margin: 0;
   font-size: 12px;
   line-height: 22px;
   color: $black50;
   height: 40px;
-  overflow:hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
   max-width: 650px;
   word-wrap: break-word;
@@ -100,46 +117,52 @@
   line-height: 22px;
   color: $black50;
   min-height: 45px;
-  overflow:hidden;
+  overflow: hidden;
   max-width: 650px;
   text-overflow: ellipsis;
   word-wrap: break-word;
 }
-.pageText>*{
+
+.pageText > * {
   max-width: 650px;
   word-wrap: break-word;
 }
+
 .pageText {
   color: $black75;
 }
 
-.info{
+.info {
   display: flex;
   flex-direction: column;
-  gap:30px
+  gap: 30px
 
 }
-.authInfo{
+
+.authInfo {
   display: flex;
   flex-direction: row;
   gap: 12px;
 }
-.infoWrapper{
+
+.infoWrapper {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
-.author{
+
+.author {
   font-size: 18px;
   line-height: 28px;
   color: $black85;
 }
-.date{
+
+.date {
   font-size: 12px;
   color: $black50;
 }
 
-.avatar{
+.avatar {
   width: 46px;
   height: 46px;
 }
@@ -155,7 +178,7 @@
   gap: 12px;
 }
 
-.btn{
+.btn {
   background-color: transparent;
   font-weight: 400;
   font-size: 14px;
@@ -185,10 +208,10 @@
   }
 }
 
-.modal{
+.modal {
   position: absolute;
-  top:90px;
-  right:-155px;
+  top: 90px;
+  right: -155px;
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -199,37 +222,39 @@
   padding: 12px 16px;
   border-radius: 4px;
   filter: drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.15));
-  &:before{
-    content:'';
+
+  &:before {
+    content: '';
     background-color: $white;
     width: 10px;
     height: 10px;
     transform: rotate(45deg);
     position: absolute;
-    left:-6px;
-    top:13px;
+    left: -6px;
+    top: 13px;
   }
 }
 
-.modalLabel{
+.modalLabel {
   display: flex;
   font-weight: 400;
   font-size: 14px;
   line-height: 22px;
   color: $grey-8;
 
-  &:before{
+  &:before {
     content: url('./warning.svg');
-    margin-right:  9px;
+    margin-right: 9px;
   }
 }
-.modalBtns{
+
+.modalBtns {
   display: flex;
   gap: 8px;
 
 }
 
-.no{
+.no {
   padding: 1px 8px;
 
   color: $grey-9;
@@ -241,7 +266,7 @@
   }
 }
 
-.yes{
+.yes {
   padding: 1px 8px;
 
   color: $white;
@@ -250,7 +275,7 @@
 
   &:hover {
     background-color: $white;
-    color: $btn-blue ;
+    color: $btn-blue;
   }
 }
 

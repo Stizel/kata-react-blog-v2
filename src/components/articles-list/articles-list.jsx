@@ -17,12 +17,13 @@ const ArticlesList = () => {
   const dispatch = useDispatch();
   const {articlesList, articlesCount, page, limit} = useSelector(state => state.articles);
   const status = useSelector(state => state.status.status);
+  const {token} = useSelector(state => state.user.user);
 
   useEffect(() => {
     dispatch(goHome(false))
     dispatch(setLocation('articles-list'));
     dispatch(setStatus('loading'));
-    dispatch(fetchArticles(page, limit));
+    dispatch(fetchArticles(page, limit, token));
   }, [page, limit,dispatch]);
 
 

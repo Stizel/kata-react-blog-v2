@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, current} from "@reduxjs/toolkit";
 
 const articlesSlice = createSlice({
   name: "article",
@@ -25,6 +25,14 @@ const articlesSlice = createSlice({
     setArticle(state, action) {
       state.article = action.payload;
     },
+    setLiked (state,action){
+      console.log("setLiked")
+      console.log(current(state),action)
+      state.articlesList = state.articlesList.map(art=>{
+          return art.slug === action.payload.slug ? action.payload :art
+      })
+      state.article = action.payload
+    }
 
   }
 });
@@ -36,6 +44,7 @@ export const {
   setPage,
   setLimit,
   setArticle,
+  setLiked
 } = articlesSlice.actions;
 
 
