@@ -1,7 +1,14 @@
-import axios from "axios";
-import {goHome, setErrors, setUser} from "../store/user-slice";
+import axios from 'axios'
 
-const baseUrl = 'https://blog.kata.academy/api';
+import { goHome, setErrors, setUser } from '../store/user-slice'
+
+const baseUrl = 'https://blog.kata.academy/api'
+
+const getHeaders = (token) => ({
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+  Authorization: `Bearer ${token}`,
+})
 
 const fetchUser = axios.create({
   baseURL: `${baseUrl}`,
@@ -10,101 +17,84 @@ const fetchUser = axios.create({
     Accept: 'application/json',
     'Content-Type': 'application/json',
   },
-});
-
-
-export const registerUser = (data) => async (dispatch) => {
-  const user = JSON.stringify({
-    user: data
-  });
-  fetchUser({
-    url: '/users',
-    data: user
-  })
-    .then((res) => res.data)
-    .then((data) => {
-      dispatch(getUser(data.user.token));
-      dispatch(setErrors(null));
-      dispatch(goHome(true));
-    })
-    .catch((err) => {
-      if (err?.response?.status === 422) {
-        dispatch(setUser(JSON.parse(user)));
-        dispatch(setErrors(err.response.data.errors));
-      }
-    });
-};
-
-export const loginUser = (data) => async (dispatch) => {
-  const user = JSON.stringify({
-    user: data
-  });
-  fetchUser({
-    url: '/users/login',
-    data: user
-  })
-    .then((res) => res.data)
-    .then((data) => {
-      dispatch(getUser(data.user.token));
-      dispatch(setErrors(null));
-      dispatch(goHome(true));
-    })
-    .catch((err) => {
-      if (err.response.status === 422) {
-        dispatch(setUser(JSON.parse(user)));
-        dispatch(setErrors(err.response.data.errors));
-      }
-    });
-};
+})
 
 export const getUser = (token) => async (dispatch) => {
   axios({
     url: `${baseUrl}/user`,
-    method: 'get',
-    headers:
-      {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
+    headers: getHeaders(token),
   })
-    .then((res) => res.data)
-    .then((data) => {
-      dispatch(setUser({user: data.user}));
-      dispatch(setErrors(null));
-      localStorage.setItem('user', JSON.stringify(data.user));
+    .then((res) => {
+      localStorage.setItem('user', JSON.stringify(res.data.user))
+      dispatch(setUser({ user: res.data.user }))
+      dispatch(setErrors(null))
     })
     .catch((err) => {
-      dispatch(setErrors(err.response.data.errors));
-    });
-};
+      dispatch(setErrors(err.response.data.errors))
+    })
+}
+
+export const registerUser = (data) => async (dispatch) => {
+  const user = JSON.stringify({
+    user: data,
+  })
+
+  fetchUser({
+    url: '/users',
+    data: user,
+  })
+    .then((res) => {
+      dispatch(getUser(res.data.user.token))
+      dispatch(setErrors(null))
+      dispatch(goHome(true))
+    })
+    .catch((err) => {
+      if (err?.response?.status === 422) {
+        dispatch(setUser(JSON.parse(user)))
+        dispatch(setErrors(err.response.data.errors))
+      }
+    })
+}
+
+export const loginUser = (data) => async (dispatch) => {
+  const user = JSON.stringify({
+    user: data,
+  })
+  fetchUser({
+    url: '/users/login',
+    data: user,
+  })
+    .then((res) => {
+      dispatch(getUser(res.data.user.token))
+      dispatch(setErrors(null))
+      dispatch(goHome(true))
+    })
+    .catch((err) => {
+      if (err.response.status === 422) {
+        dispatch(setUser(JSON.parse(user)))
+        dispatch(setErrors(err.response.data.errors))
+      }
+    })
+}
 
 export const updateUser = (data) => async (dispatch) => {
-
-  const token = JSON.parse(localStorage.getItem('user')).token
+  const { token } = JSON.parse(localStorage.getItem('user'))
 
   const user = JSON.stringify({
-    user: data
-  });
-
+    user: data,
+  })
 
   axios({
     url: `${baseUrl}/user`,
     method: 'put',
-    headers:
-      {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-    data: user
+    headers: getHeaders(token),
+    data: user,
   })
-    .then((res) => res.data)
-    .then((data) => {
-      dispatch(getUser(data.user.token));
-      dispatch(setErrors(null));
+    .then((res) => {
+      dispatch(getUser(res.data.user.token))
+      dispatch(setErrors(null))
     })
     .catch((err) => {
-      dispatch(setErrors(err.response.data.errors));
-    });
-};
+      dispatch(setErrors(err.response.data.errors))
+    })
+}

@@ -1,36 +1,35 @@
-import React, {useEffect} from 'react';
-import header from './header.module.scss';
-import classNames from "classnames";
-import {useDispatch, useSelector} from "react-redux";
-import {Link} from "react-router-dom";
-import {logOut} from "../../store/user-slice";
-import {getUser} from "../../services/user-service";
-import {setArticle} from "../../store/article-slice";
+import React, { useEffect } from 'react'
+import classNames from 'classnames'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
-const link = classNames(header['link']);
-const signUp = classNames(link, header.signUp);
-const createArticle = classNames(link, header["create-article"]);
-const logOutBtn = classNames(link, header['log-out']);
+import { logOut } from '../../store/user-slice'
+import { getUser } from '../../services/user-service'
+import { addArticle } from '../../store/articles-slice'
 
+import header from './header.module.scss'
 
-const Header = () => {
+const link = classNames(header.link)
+const signUp = classNames(link, header.signUp)
+const createArticle = classNames(link, header['create-article'])
+const logOutBtn = classNames(link, header['log-out'])
 
-  const dispatch = useDispatch();
-  const {user} = useSelector(state => state.user);
-  const {token} = user
-  const avatar = user.image ? user.image : 'https://static.productionready.io/images/smiley-cyrus.jpg';
+function Header() {
+  const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.user)
+  const { token } = user
+  const avatar = user.image ? user.image : 'https://static.productionready.io/images/smiley-cyrus.jpg'
 
   const onLogOut = () => {
-    localStorage.removeItem('user');
-    dispatch(logOut());
-  };
+    localStorage.removeItem('user')
+    dispatch(logOut())
+  }
 
   useEffect(() => {
     if (token) {
-      dispatch(getUser(token));
+      dispatch(getUser(token))
     }
-  }, [token, dispatch]);
-
+  }, [])
 
   const headerAuthorization = (
     <ul className={header.authorization}>
@@ -45,25 +44,31 @@ const Header = () => {
         </Link>
       </li>
     </ul>
-  );
+  )
 
   const headerMenu = (
     <div className={header.menu}>
-      <Link to="/new-article" onClick={setArticle({})} className={createArticle}>Create article</Link>
-      <Link to="/profile" className={header.user}>
-        <span className={header["user__name"]}>{user.username}</span>
-        <img className={header["user__avatar"]} src={avatar} alt="avatar"/>
+      <Link to="/new-article" onClick={addArticle({})} className={createArticle}>
+        Create article
       </Link>
-      <Link to="/" className={logOutBtn} onClick={() => onLogOut()}>Log Out</Link>
+      <Link to="/profile" className={header.user}>
+        <span className={header.userName}>{user.username}</span>
+        <img className={header.user__avatar} src={avatar} alt="avatar" />
+      </Link>
+      <Link to="/" className={logOutBtn} onClick={() => onLogOut()}>
+        Log Out
+      </Link>
     </div>
-  );
+  )
 
   return (
     <div className={header.main}>
-      <Link to="/articles" className={header.label}>Realworld Blog</Link>
+      <Link to="/articles" className={header.label}>
+        Realworld Blog
+      </Link>
       {token ? headerMenu : headerAuthorization}
     </div>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

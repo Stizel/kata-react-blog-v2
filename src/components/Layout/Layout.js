@@ -1,15 +1,15 @@
-import React from 'react';
-import Header from "../header/header";
-import {Outlet} from "react-router-dom";
+import React from 'react'
+import { Outlet } from 'react-router-dom'
 
+import Header from '../header/header'
 
-const Layout = () => {
+function Layout() {
   return (
     <>
-      <Header/>
-      <Outlet/>
+      <Header />
+      <Outlet />
     </>
-  );
-};
+  )
+}
 
-export {Layout};
+export default Layout

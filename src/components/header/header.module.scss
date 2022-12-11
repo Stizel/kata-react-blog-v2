@@ -44,7 +44,6 @@
   }
 }
 
-
 .signUp {
   color: $btn-green;
   border: 1px $btn-green solid;
@@ -61,7 +60,7 @@
 .menu {
   display: flex;
   align-items: center;
-  gap:27px;
+  gap: 27px;
 }
 
 .user {
@@ -71,11 +70,18 @@
   gap: 13px;
   color: $black85;
 }
-.user__avatar{
-  height:46px;
+
+.userName {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.user__avatar {
+  height: 46px;
   width: 46px;
 }
-.create-article{
+.create-article {
   font-size: 14px;
   line-height: 22px;
   color: $btn-green;
@@ -90,7 +96,7 @@
   }
 }
 
-.log-out{
+.log-out {
   color: $black75;
   border: 1px $black75 solid;
   margin-right: 22px;

@@ -1,298 +1,121 @@
-import axios from "axios";
-import {addArticles, addArticlesCount, setArticle, setLiked} from "../store/article-slice";
-import {setStatus} from "../store/status-slice";
-import {format} from "date-fns";
-import {goHome} from "../store/user-slice";
+import axios from 'axios'
+import { format } from 'date-fns'
 
+import { addArticle, addArticles, addArticlesCount, setLiked } from '../store/articles-slice'
+import { setStatus } from '../store/status-slice'
+import { goHome } from '../store/user-slice'
 
-const baseUrl = 'https://blog.kata.academy/api';
-const tagQuery = '';
-const tag = tagQuery ? `&tag=${tagQuery}` : '';
-const authorQuery = '';
-const author = authorQuery ? `&author=${authorQuery}` : '';
-const favQuery = '';
-const favorited = favQuery ? `&favorited=${favQuery}` : '';
+const baseUrl = 'https://blog.kata.academy/api'
 
-const getArticleItems = (articles) =>
-  articles.map((article) =>
-    getArticleItem(article));
+const getArticleItem = (article) => ({
+  slug: article.slug,
+  title: article.title,
+  likes: article.favoritesCount,
+  tags: article.tagList,
+  text: article.body,
+  liked: article.favorited,
+  description: article.description,
+  username: article.author.username,
+  updatedDate: format(new Date(article.updatedAt), 'MMMM d, yyyy'),
+  avatarPath: article.author.image,
+})
 
-const getArticleItem = (article) => {
-  return {
-    slug: article.slug,
-    title: article.title,
-    headerTitle: strCut(article.title, 40),
-    likes: article.favoritesCount,
-    tags: article.tagList,
-    text: article.body.trim(),
-    liked: article.favorited,
-    description: article.description,
-    username: article.author.username,
-    updatedDate: format(new Date(article.updatedAt), "MMMM d, yyyy"),
-    avatarPath: article.author.image,
-  };
-};
+const getArticleItems = (articles) => articles.map((article) => getArticleItem(article))
 
+const getHeaders = (token) => ({
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+  Authorization: `Bearer ${token}`,
+})
 
-export const fetchArticles = (page, limit,token='') => async (dispatch) => {
-  axios(
-    {
-      url:`${baseUrl}/articles?${tag}${author}${favorited}&limit=${limit}&offset=${(page - 1) * limit}`,
-      method:'get',
-      headers:
-        {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-    }
-    )
-    .then((res) => res.data)
-    .then((data) => {
-      if (data.articles.length !== 0) {
-        dispatch(addArticles(getArticleItems(data.articles)));
-        dispatch(addArticlesCount(data.articlesCount));
-        dispatch(setStatus('ok'));
+export const fetchArticles =
+  (page, limit, token = '') =>
+  async (dispatch) =>
+    axios(`${baseUrl}/articles?&limit=${limit}&offset=${(page - 1) * limit}`, { headers: getHeaders(token) })
+      .then((res) => {
+        dispatch(addArticles(getArticleItems(res.data.articles)))
+        dispatch(addArticlesCount(res.data.articlesCount))
+        dispatch(setStatus('ok'))
+      })
+      .catch((err) => {
+        switch (err.code) {
+          case 'ERR_BAD_REQUEST':
+            dispatch(setStatus('404'))
+            break
+          default:
+            dispatch(setStatus('error'))
+            break
+        }
+      })
 
-      } else {
-        dispatch(setStatus('404'));
-      }
+export const fetchArticle =
+  (slug, token = '') =>
+  async (dispatch) =>
+    axios(`${baseUrl}/articles/${slug}`, { headers: getHeaders(token) }).then((res) => {
+      dispatch(addArticle(getArticleItem(res.data.article)))
+      dispatch(setStatus('ok'))
     })
-    .catch((err) => {
-
-      switch (err.code) {
-        case "ERR_BAD_REQUEST":
-          dispatch(setStatus('404'));
-          break;
-        case "ERR_NETWORK":
-          dispatch(setStatus('error'));
-          break;
-        default:
-          dispatch(setStatus('error'));
-          break;
-      }
-    });
-};
-
-
-export const fetchArticle = (slug,token='') => async (dispatch) => {
-  axios({url:`${baseUrl}/articles/${slug}`,
-  method:'get',
-      headers:
-        {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-    }
-  )
-    .then((res) => res.data)
-    .then((data) => {
-
-      dispatch(setArticle(getArticleItem(data.article)));
-      dispatch(setStatus('ok'));
-    });
-};
-
-
-export const strCut = (str = "", length) => {
-
-  const newStr = str.substring(0, length);
-  const lastSpace = newStr.lastIndexOf(' ');
-  let shortDesc = newStr.slice(0, lastSpace);
-  if (/[.,:]/.test(shortDesc.split(' ').pop())) {
-    shortDesc = shortDesc.slice(0, -1);
-  }
-  return `${shortDesc}...`;
-};
-
 
 export const postNewArticle = (data, tags, token) => async (dispatch) => {
-
-  const article = JSON.stringify({
-    article: {
-      ...data,
-      tagList: tags
-    }
-  });
-
-  axios({
+  const article = JSON.stringify({ article: { ...data, tagList: tags } })
+  return axios({
     url: `${baseUrl}/articles`,
-    method: "post",
-    headers:
-      {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-    data: article
+    method: 'post',
+    headers: getHeaders(token),
+    data: article,
   })
-    .then((res) => res.data)
-    .then((data) => {
-
-      dispatch(setStatus('ok'));
-      dispatch(goHome(true));
+    .then(() => {
+      dispatch(setStatus('ok'))
+      dispatch(goHome(true))
     })
-    .catch((err) => {
-      switch (err.code) {
-        case "ERR_BAD_REQUEST":
-          dispatch(setStatus('404'));
-          break;
-        case "ERR_NETWORK":
-          dispatch(setStatus('error'));
-          break;
-        case "ERR_BAD_RESPONSE":
-          dispatch(setStatus('error'));
-          break;
-        default:
-          dispatch(setStatus('error'));
-          break;
-      }
-    });
-};
-
+    .catch(() => {
+      dispatch(setStatus('error'))
+    })
+}
 
 export const editArticle = (data, tags, token, slug) => async (dispatch) => {
+  const article = JSON.stringify({ article: { ...data, tagList: tags } })
+  return axios({
+    url: `${baseUrl}/articles/${slug}`,
+    method: 'put',
+    headers: getHeaders(token),
+    data: article,
+  })
+    .then((res) => res.data)
+    .then(() => {
+      dispatch(setStatus('ok'))
+      dispatch(goHome(true))
+    })
+    .catch(() => {
+      dispatch(setStatus('error'))
+    })
+}
 
-  const article = JSON.stringify({
-    article: {
-      ...data,
-      tagList: tags
-    }
-  });
-
+export const deleteArticle = (token, slug) => async (dispatch) =>
   axios({
     url: `${baseUrl}/articles/${slug}`,
-    method: "put",
-    headers:
-      {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-    data: article
+    method: 'delete',
+    headers: getHeaders(token),
   })
     .then((res) => res.data)
-    .then((data) => {
-      dispatch(setStatus('ok'));
-      dispatch(goHome(true));
+    .then(() => {
+      dispatch(setStatus('ok'))
+      dispatch(goHome(true))
     })
-    .catch((err) => {
-      switch (err.code) {
-        case "ERR_BAD_REQUEST":
-          dispatch(setStatus('404'));
-          break;
-        case "ERR_NETWORK":
-          dispatch(setStatus('error'));
-          break;
-        case "ERR_BAD_RESPONSE":
-          dispatch(setStatus('error'));
-          break;
-        default:
-          dispatch(setStatus('error'));
-          break;
-      }
-    });
-};
-
-export const deleteArticle = (token, slug) => async (dispatch) => {
-  axios({
-    url: `${baseUrl}/articles/${slug}`,
-    method: "delete",
-    headers:
-      {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-  })
-    .then((res) => res.data)
-    .then((data) => {
-      dispatch(setStatus('ok'));
-      dispatch(goHome(true));
+    .catch(() => {
+      dispatch(setStatus('error'))
     })
-    .catch((err) => {
-      switch (err.code) {
-        case "ERR_BAD_REQUEST":
-          dispatch(setStatus('404'));
-          break;
-        case "ERR_NETWORK":
-          dispatch(setStatus('error'));
-          break;
-        case "ERR_BAD_RESPONSE":
-          dispatch(setStatus('error'));
-          break;
-        default:
-          dispatch(setStatus('error'));
-          break;
-      }
-    });
-};
 
-export const setLike = (token, slug) => async (dispatch) => {
+export const setLike = (token, slug, liked) => async (dispatch) =>
   axios({
     url: `${baseUrl}/articles/${slug}/favorite`,
-    method: "post",
-    headers:
-      {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
+    method: liked ? 'delete' : 'post',
+    headers: getHeaders(token),
   })
-    .then((res) => res.data)
-    .then((data) => {
-      dispatch(setStatus('ok'));
-      dispatch(setLiked(getArticleItem(data.article)))
+    .then((res) => {
+      dispatch(setStatus('ok'))
+      dispatch(setLiked(getArticleItem(res.data.article)))
     })
-    .catch((err) => {
-      switch (err.code) {
-        case "ERR_BAD_REQUEST":
-          dispatch(setStatus('404'));
-          break;
-        case "ERR_NETWORK":
-          dispatch(setStatus('error'));
-          break;
-        case "ERR_BAD_RESPONSE":
-          dispatch(setStatus('error'));
-          break;
-        default:
-          dispatch(setStatus('error'));
-          break;
-      }
-    });
-};
-
-export const removeLike = (token, slug) => async (dispatch) => {
-  axios({
-    url: `${baseUrl}/articles/${slug}/favorite`,
-    method: "delete",
-    headers:
-      {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-  })
-    .then((res) => res.data)
-    .then((data) => {
-      dispatch(setStatus('ok'));
-      dispatch(setLiked(getArticleItem(data.article)))
+    .catch(() => {
+      dispatch(setStatus('error'))
     })
-    .catch((err) => {
-      switch (err.code) {
-        case "ERR_BAD_REQUEST":
-          dispatch(setStatus('404'));
-          break;
-        case "ERR_NETWORK":
-          dispatch(setStatus('error'));
-          break;
-        case "ERR_BAD_RESPONSE":
-          dispatch(setStatus('error'));
-          break;
-        default:
-          dispatch(setStatus('error'));
-          break;
-      }
-    });
-};

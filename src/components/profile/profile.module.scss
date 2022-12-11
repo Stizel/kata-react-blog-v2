@@ -1,4 +1,4 @@
-@import "../../vars";
+@import '../../vars';
 
 .page {
   font-family: $roboto;
@@ -68,8 +68,6 @@
   }
 }
 
-
-
 .submit {
   color: $white;
   font-weight: 400;
@@ -80,14 +78,14 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  &:hover{
+  &:hover {
     border: 1px $btn-blue solid;
     background-color: $white;
     color: $btn-blue;
   }
 }
 
-.error{
+.error {
   font-weight: 400;
   font-size: 14px;
   line-height: 22px;
@@ -95,7 +93,7 @@
   color: $error;
 }
 
-.user__avatar{
-  height:46px;
+.user__avatar {
+  height: 46px;
   width: 46px;
 }

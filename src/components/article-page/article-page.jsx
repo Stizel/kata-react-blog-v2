@@ -1,33 +1,30 @@
-import React, {useEffect} from 'react';
-import articlePageStyl from './article-page.module.scss';
-import {useParams} from "react-router-dom";
-import {fetchArticle} from "../../services/articles-service";
-import {useDispatch, useSelector} from "react-redux";
-import ArticleCard from "../article-card/article-card";
-import {setLocation, setStatus} from "../../store/status-slice";
+import React, { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
+import { fetchArticle } from '../../services/articles-service'
+import Article from '../article/article'
+import { setLocation, setStatus } from '../../store/status-slice'
 
+import articlePageStyl from './article-page.module.scss'
 
-const ArticlePage = () => {
-  const {slug} = useParams();
+function ArticlePage() {
   const dispatch = useDispatch()
-const {token} = useSelector(state => state.user.user)
+  const { slug } = useParams()
+  const { token } = useSelector((state) => state.user.user)
 
-  const {article} = useSelector(state => state.articles)
-console.log(article)
+  const { articles } = useSelector((state) => state.articles)
+  const article = articles.find((item) => item.slug === slug)
+
   useEffect(() => {
-    dispatch(setLocation('article-page'));
-    dispatch(setStatus('loading'));
-    dispatch(fetchArticle(slug,token))
-  }, [dispatch,slug]);
+    dispatch(setLocation('article-page'))
+    dispatch(setStatus('loading'))
+    dispatch(fetchArticle(slug, token))
+  }, [dispatch, slug])
 
+  const articleExist = article && Object.keys(article).length !== 0
 
-const articleExist = Object.keys(article).length !==0
-  return (
-    <div className={articlePageStyl.main}>
-      {articleExist && <ArticleCard article={article}/>}
-    </div>
-  );
-};
+  return <div className={articlePageStyl.main}>{articleExist && <Article article={article} />}</div>
+}
 
-export default ArticlePage;
+export default ArticlePage

@@ -1,17 +1,18 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
 
 const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState: {
     user: JSON.parse(localStorage.getItem('user'))
-      ? JSON.parse(localStorage.getItem('user')) : {
-        image: '',
-        bio: '',
-        token: '',
-        username: '',
-        email: '',
-        password: ''
-      },
+      ? JSON.parse(localStorage.getItem('user'))
+      : {
+          image: '',
+          bio: '',
+          token: '',
+          username: '',
+          email: '',
+          password: '',
+        },
     errors: null,
     home: false,
   },
@@ -23,21 +24,21 @@ const userSlice = createSlice({
         token: '',
         username: '',
         email: '',
-        password: ''
-      };
+        password: '',
+      }
     },
     setUser(state, action) {
-      const {user} = action.payload;
-      state.user = {...state.user, ...user};
+      const { user } = action.payload
+      state.user = { ...state.user, ...user }
     },
     setErrors(state, action) {
-      state.errors = action.payload;
+      state.errors = action.payload
     },
     goHome(state, action) {
-      state.home = action.payload;
+      state.home = action.payload
     },
-  }
-});
+  },
+})
 
-export default userSlice.reducer;
-export const {setUser, setErrors, logOut, goHome} = userSlice.actions;
+export default userSlice.reducer
+export const { setUser, setErrors, logOut, goHome } = userSlice.actions
