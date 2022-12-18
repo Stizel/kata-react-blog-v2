@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-import { goHome, setErrors, setUser } from '../store/user-slice'
+import { setErrors, setUser } from '../store/slices/user-slice'
+import { goHome } from '../store/slices/status-slice'
 
 const baseUrl = 'https://blog.kata.academy/api'
 

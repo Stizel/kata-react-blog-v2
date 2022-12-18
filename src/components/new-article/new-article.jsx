@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import classNames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
@@ -7,13 +7,13 @@ import { v4 as uuidv4 } from 'uuid'
 
 import Tag from '../tag/tag'
 import { editArticle, fetchArticle, postNewArticle } from '../../services/articles-service'
-import { setErrors } from '../../store/user-slice'
-import { addTag, createTags } from '../../store/tags-slice'
+import { setErrors } from '../../store/slices/user-slice'
+import { createTags } from '../../store/slices/tags-slice'
 
-import newArticle from './new-article.module.scss'
+import styles from './new-article.module.scss'
 
-const areaStyle = classNames(newArticle.input, newArticle.textarea)
-const sendBtn = classNames(newArticle.btn, newArticle.send)
+const areaStyle = classNames(styles.input, styles.textarea)
+const sendBtn = classNames(styles.btn, styles.send)
 
 function NewArticle() {
   const dispatch = useDispatch()
@@ -23,12 +23,12 @@ function NewArticle() {
 
   const { articles } = useSelector((state) => state.articles)
   const article = articles.find((item) => item.slug === slug)
-  const { tags } = useSelector((state) => state.newArticle)
+  const { tags } = useSelector((state) => state.tags)
   const { token } = useSelector((state) => state.user.user)
-  const home = useSelector((state) => state.user.home)
+  const home = useSelector((state) => state.status.home)
 
   const tagz = tags.map((tag, idx) => (
-    <li key={tag.id} className={newArticle.tagWrapper}>
+    <li key={tag.id} className={styles.tagWrapper}>
       <Tag idx={idx} id={tag.id} value={tag.label} tagsLength={tags.length} />
     </li>
   ))
@@ -45,16 +45,14 @@ function NewArticle() {
     // eslint-disable-next-line no-unused-expressions
     slug ? dispatch(editArticle(data, sendTags, token, slug)) : dispatch(postNewArticle(data, sendTags, token))
   }
+  const memToken = useMemo(() => token, [])
 
   useEffect(() => {
-    if (slug) dispatch(fetchArticle(slug))
-  }, [dispatch, slug])
-
-  useEffect(() => {
-    dispatch(setErrors(null))
-    if (!token) navigate('/')
+    if (!memToken) navigate('/')
     if (home) navigate('/')
-  }, [home, dispatch, navigate, token])
+    if (slug) dispatch(fetchArticle(slug))
+    dispatch(setErrors(null))
+  }, [home, dispatch, navigate, memToken, slug])
 
   useEffect(() => {
     if (slug && article && Object.keys(article).length > 0) {
@@ -67,51 +65,52 @@ function NewArticle() {
       })
       dispatch(createTags(newTags))
     } else {
-      dispatch(addTag())
+      dispatch(createTags([{ id: uuidv4(), label: '' }]))
     }
-  }, [article, slug, dispatch])
+  }, [dispatch, slug, article])
 
   return (
-    <div className={newArticle.main}>
-      <form className={newArticle.form} onSubmit={handleSubmit(onSubmit)}>
-        <h1 className={newArticle.title}>{slug ? 'Edit article' : 'Create new article'}</h1>
-        <ul className={newArticle.inputsList}>
-          <li className={newArticle.inputsItem}>
-            <label htmlFor="title" className={newArticle.label}>
+    <div className={styles.main}>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <h1 className={styles.title}>{slug ? 'Edit article' : 'Create new article'}</h1>
+        <ul className={styles.inputsList}>
+          <li>
+            <label htmlFor="title" className={styles.label}>
               Title
               <input
                 id="title"
                 type="text"
                 placeholder="Title"
-                className={newArticle.input}
+                className={styles.input}
                 defaultValue={slug && article && article.title}
+                autoFocus
                 {...register('title', {
                   required: 'Title can`t be empty.',
                 })}
               />
             </label>
-            {errors.title && <p className={newArticle.error}>{errors.title.message}</p>}
+            {errors.title && <p className={styles.error}>{errors.title.message}</p>}
           </li>
 
-          <li className={newArticle.inputsItem}>
-            <label htmlFor="description" className={newArticle.label}>
+          <li>
+            <label htmlFor="description" className={styles.label}>
               Short description
               <input
                 id="description"
                 type="text"
                 placeholder="Short description"
-                className={newArticle.input}
+                className={styles.input}
                 defaultValue={slug && article && article.description}
                 {...register('description', {
                   required: 'Description can`t be empty.',
                 })}
               />
             </label>
-            {errors.description && <p className={newArticle.error}>{errors.description.message}</p>}
+            {errors.description && <p className={styles.error}>{errors.description.message}</p>}
           </li>
 
-          <li className={newArticle.inputsItem}>
-            <label htmlFor="text" className={newArticle.label}>
+          <li>
+            <label htmlFor="text" className={styles.label}>
               Text
               <textarea
                 id="text"
@@ -123,13 +122,13 @@ function NewArticle() {
                 })}
               />
             </label>
-            {errors.body && <p className={newArticle.error}>{errors.body.message}</p>}
+            {errors.body && <p className={styles.error}>{errors.body.message}</p>}
           </li>
 
-          <li className={newArticle.inputsItem}>
-            <label htmlFor="tags" className={newArticle.label}>
+          <li>
+            <label htmlFor="tags" className={styles.label}>
               Tags
-              <ul className={newArticle.tagsList}>{tagz}</ul>
+              <ul className={styles.tagsList}>{tagz}</ul>
             </label>
           </li>
         </ul>

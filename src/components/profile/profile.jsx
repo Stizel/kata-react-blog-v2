@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '../../services/user-service'
 import signUp from '../sign-up/sign-up.module.scss'
 
-import profile from './profile.module.scss'
+import styles from './profile.module.scss'
 
 function Profile() {
   const {
@@ -21,16 +21,16 @@ function Profile() {
   const onSubmit = (data) => dispatch(updateUser(data))
 
   return (
-    <div className={profile.page}>
-      <form className={profile.form} onSubmit={handleSubmit(onSubmit)}>
-        <h1 className={profile.title}>Edit Profile</h1>
+    <div className={styles.page}>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <h1 className={styles.title}>Edit Profile</h1>
 
-        <ul className={profile.inputsList}>
-          <li className={profile.inputsItem}>
-            <label htmlFor="name" className={profile.label}>
+        <ul className={styles.inputsList}>
+          <li>
+            <label htmlFor="name" className={styles.label}>
               Username
               <input
-                className={profile.input}
+                className={styles.input}
                 type="text"
                 id="name"
                 placeholder="Username"
@@ -50,7 +50,7 @@ function Profile() {
                 })}
               />
             </label>
-            {errors.username && <p className={profile.error}>{errors.username.message}</p>}
+            {errors.username && <p className={styles.error}>{errors.username.message}</p>}
             {servErr?.username && (
               <p className={signUp.error}>
                 {user.username} {servErr?.username}
@@ -58,11 +58,11 @@ function Profile() {
             )}
           </li>
 
-          <li className={profile.inputsItem}>
-            <label htmlFor="email" className={profile.label}>
+          <li>
+            <label htmlFor="email" className={styles.label}>
               Email address
               <input
-                className={profile.input}
+                className={styles.input}
                 type="email"
                 id="email"
                 placeholder="Email address"
@@ -77,7 +77,7 @@ function Profile() {
                 })}
               />
             </label>
-            {errors.email && <p className={profile.error}>{errors.email.message}</p>}
+            {errors.email && <p className={styles.error}>{errors.email.message}</p>}
             {servErr?.email && (
               <p className={signUp.error}>
                 {user.email} {servErr?.email}
@@ -85,11 +85,11 @@ function Profile() {
             )}
           </li>
 
-          <li className={profile.inputsItem}>
-            <label htmlFor="password" className={profile.label}>
+          <li>
+            <label htmlFor="password" className={styles.label}>
               New password
               <input
-                className={profile.input}
+                className={styles.input}
                 type="password"
                 id="password"
                 placeholder="New password"
@@ -106,14 +106,14 @@ function Profile() {
                 })}
               />
             </label>
-            {errors.password && <p className={profile.error}>{errors.password.message}</p>}
+            {errors.password && <p className={styles.error}>{errors.password.message}</p>}
           </li>
 
-          <li className={profile.inputsItem}>
-            <label htmlFor="avatar" className={profile.label}>
+          <li>
+            <label htmlFor="avatar" className={styles.label}>
               Avatar image (url)
               <input
-                className={profile.input}
+                className={styles.input}
                 type="text"
                 id="avatar"
                 placeholder="Avatar image"
@@ -128,11 +128,11 @@ function Profile() {
                 })}
               />
             </label>
-            {errors.image && <p className={profile.error}>{errors.image.message}</p>}
+            {errors.image && <p className={styles.error}>{errors.image.message}</p>}
           </li>
         </ul>
 
-        <button type="submit" className={profile.submit}>
+        <button type="submit" className={styles.submit}>
           Save
         </button>
       </form>

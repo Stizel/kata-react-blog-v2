@@ -1,4 +1,3 @@
-import './app.module.scss'
 import { Route, Routes } from 'react-router-dom'
 
 import ArticlesList from '../articles-list/articles-list'

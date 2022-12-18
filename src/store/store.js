@@ -1,19 +1,17 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit'
 
-import articlesSlice from './articles-slice'
-import statusSlice from './status-slice'
-import userSlice from './user-slice'
-import newArticleSlice from './tags-slice'
-
-const rootReducer = combineReducers({
-  user: userSlice,
-  articles: articlesSlice,
-  status: statusSlice,
-  newArticle: newArticleSlice,
-})
+import userSlice from './slices/user-slice'
+import articlesSlice from './slices/articles-slice'
+import statusSlice from './slices/status-slice'
+import tagsSlice from './slices/tags-slice'
 
 const store = configureStore({
-  reducer: rootReducer,
+  reducer: {
+    user: userSlice,
+    articles: articlesSlice,
+    status: statusSlice,
+    tags: tagsSlice,
+  },
 })
 
 export default store

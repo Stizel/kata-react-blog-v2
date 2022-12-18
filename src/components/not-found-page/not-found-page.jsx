@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
 
-import notFoundStyle from './not-found-page.module.scss'
+import styles from './not-found-page.module.scss'
 
 function NotFoundPage() {
   return (
-    <div className={notFoundStyle.main}>
+    <div className={styles.main}>
       {/* eslint-disable-next-line react/no-unescaped-entities */}
       This page doesn't exist. Go <Link to="/">home</Link>
     </div>

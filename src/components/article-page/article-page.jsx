@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { fetchArticle } from '../../services/articles-service'
 import Article from '../article/article'
-import { setLocation, setStatus } from '../../store/status-slice'
+import { setLocation, setStatus } from '../../store/slices/status-slice'
 
-import articlePageStyl from './article-page.module.scss'
+import styles from './article-page.module.scss'
 
 function ArticlePage() {
   const dispatch = useDispatch()
@@ -24,7 +24,7 @@ function ArticlePage() {
 
   const articleExist = article && Object.keys(article).length !== 0
 
-  return <div className={articlePageStyl.main}>{articleExist && <Article article={article} />}</div>
+  return <div className={styles.main}>{articleExist && <Article article={article} />}</div>
 }
 
 export default ArticlePage

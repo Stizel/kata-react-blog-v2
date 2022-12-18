@@ -3,12 +3,11 @@ import { Alert, Pagination, Spin } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { fetchArticles } from '../../services/articles-service'
-import { setLimit, setPage } from '../../store/articles-slice'
-import { setLocation, setStatus } from '../../store/status-slice'
+import { setLimit, setPage } from '../../store/slices/articles-slice'
+import { setLocation, setStatus, goHome } from '../../store/slices/status-slice'
 import Article from '../article/article'
-import { goHome } from '../../store/user-slice'
 
-import articlesStyl from './articles-list.module.scss'
+import styles from './articles-list.module.scss'
 
 function ArticlesList() {
   const dispatch = useDispatch()
@@ -47,7 +46,7 @@ function ArticlesList() {
       case 'offline':
         return (
           <Alert
-            className={articlesStyl.error}
+            className={styles.error}
             message="У вас нет интернет соединения!"
             description="Пожалуйста проверьте ваш кабель"
             type="error"
@@ -68,11 +67,11 @@ function ArticlesList() {
   }
 
   return (
-    <div className={articlesStyl.main}>
-      <ul className={articlesStyl.list}>{content}</ul>
+    <div className={styles.main}>
+      <ul className={styles.list}>{content}</ul>
       {status !== 'error' && (
         <Pagination
-          className={articlesStyl.pag}
+          className={styles.pag}
           hideOnSinglePage
           current={page}
           pageSize={limit}

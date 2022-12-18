@@ -4,10 +4,10 @@ import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { loginUser } from '../../services/user-service'
-import { setErrors } from '../../store/user-slice'
+import { setErrors } from '../../store/slices/user-slice'
 import signUp from '../sign-up/sign-up.module.scss'
 
-import signIn from './sign-in.module.scss'
+import styles from './sign-in.module.scss'
 
 function SignIn() {
   const {
@@ -27,24 +27,24 @@ function SignIn() {
   }
 
   const navigate = useNavigate()
-  const home = useSelector((state) => state.user.home)
+  const home = useSelector((state) => state.status.home)
   useEffect(() => {
     dispatch(setErrors(null))
     if (home) navigate('/')
   }, [home, dispatch, navigate])
 
   return (
-    <div className={signIn.page}>
-      <form className={signIn.form} onSubmit={handleSubmit(onSubmit)}>
-        <h1 className={signIn.title}>Sign In</h1>
+    <div className={styles.page}>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <h1 className={styles.title}>Sign In</h1>
 
-        <ul className={signIn.inputsList}>
-          <li className={signIn.inputsItem}>
-            <label htmlFor="email" className={signIn.label}>
+        <ul className={styles.inputsList}>
+          <li className={styles.inputsItem}>
+            <label htmlFor="email" className={styles.label}>
               Email address{' '}
             </label>
             <input
-              className={signIn.input}
+              className={styles.input}
               type="email"
               id="email"
               placeholder="Email address"
@@ -61,14 +61,14 @@ function SignIn() {
                 },
               })}
             />
-            {errors.email && <p className={signIn.error}>{errors.email.message}</p>}
+            {errors.email && <p className={styles.error}>{errors.email.message}</p>}
           </li>
-          <li className={signIn.inputsItem}>
-            <label htmlFor="password" className={signIn.label}>
+          <li className={styles.inputsItem}>
+            <label htmlFor="password" className={styles.label}>
               Password{' '}
             </label>
             <input
-              className={signIn.input}
+              className={styles.input}
               type="password"
               id="password"
               placeholder="Password"
@@ -77,20 +77,20 @@ function SignIn() {
                 required: 'Password can`t be empty.',
               })}
             />
-            {errors.password && <p className={signIn.error}>{errors.password.message}</p>}
+            {errors.password && <p className={styles.error}>{errors.password.message}</p>}
             {servErr && (
               <p className={signUp.error}>{`${Object.entries(servErr)[0][0]} ${Object.entries(servErr)[0][1]}`}</p>
             )}
           </li>
         </ul>
 
-        <button type="submit" className={signIn.submit}>
+        <button type="submit" className={styles.submit}>
           Sign In
         </button>
 
-        <span className={signIn.signInLabel}>
+        <span className={styles.signInLabel}>
           Don`t have an account?
-          <Link className={signIn.signUp} to="/sign-up">
+          <Link className={styles.signUp} to="/sign-up">
             Sign Up.
           </Link>
         </span>

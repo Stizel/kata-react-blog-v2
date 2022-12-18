@@ -8,7 +8,7 @@ import classNames from 'classnames'
 
 import { deleteArticle, fetchArticle, fetchArticles, setLike } from '../../services/articles-service'
 
-import articleCard from './article.module.scss'
+import styles from './article.module.scss'
 
 function Article({ article }) {
   const navigate = useNavigate()
@@ -19,8 +19,7 @@ function Article({ article }) {
   const { user } = useSelector((state) => state.user)
   const { username, token } = user
 
-  const cardStyle =
-    location === 'articles-list' ? articleCard.preview : classNames(articleCard.preview, articleCard.singleCard)
+  const cardStyle = location === 'articles-list' ? styles.preview : classNames(styles.preview, styles.singleCard)
 
   const [modal, setModal] = useState(false)
   const [avatar, setAvatar] = useState(null)
@@ -38,7 +37,7 @@ function Article({ article }) {
       const tagStr = String(tag)
       if (tagStr.length > 20 || tagStr.length < 1) return null
       return (
-        <li key={uuidv4()} className={articleCard.tag}>
+        <li key={uuidv4()} className={styles.tag}>
           {tagStr}
         </li>
       )
@@ -59,24 +58,20 @@ function Article({ article }) {
     dispatch(deleteArticle(token, slug))
     navigate('/')
   }
-  const likeStyl = classNames(
-    articleCard.blackLike,
-    token && articleCard.activeLike,
-    article.liked && articleCard.redLike
-  )
+  const likeStyl = classNames(styles.blackLike, token && styles.activeLike, article.liked && styles.redLike)
 
   const editLink = `/articles/${slug}/edit`
-  const deleteBtn = classNames(articleCard.btn, articleCard.delete)
-  const editBtn = classNames(articleCard.btn, articleCard.edit)
-  const yesBtn = classNames(articleCard.btn, articleCard.yes)
-  const noBtn = classNames(articleCard.btn, articleCard.no)
+  const deleteBtn = classNames(styles.btn, styles.delete)
+  const editBtn = classNames(styles.btn, styles.edit)
+  const yesBtn = classNames(styles.btn, styles.yes)
+  const noBtn = classNames(styles.btn, styles.no)
 
   return (
-    <div className={articleCard.cardWrapper}>
+    <div className={styles.cardWrapper}>
       <div className={cardStyle}>
-        <section className={articleCard.content}>
-          <div className={articleCard.titleWrapper}>
-            <Link to={articlePath} className={articleCard.title}>
+        <section className={styles.content}>
+          <div className={styles.titleWrapper}>
+            <Link to={articlePath} className={styles.title}>
               {title}
             </Link>
             {/* eslint-disable-next-line react/button-has-type */}
@@ -84,20 +79,20 @@ function Article({ article }) {
               {article.likes}
             </button>
           </div>
-          <ul className={articleCard.tags}>{printTags(article)}</ul>
-          <p className={articleCard.description}>{article.description}</p>
+          <ul className={styles.tags}>{printTags(article)}</ul>
+          <p className={styles.description}>{article.description}</p>
         </section>
-        <section className={articleCard.info}>
-          <div className={articleCard.authInfo}>
-            <div className={articleCard.infoWrapper}>
-              <span className={articleCard.author}>{article.username}</span>
-              <span className={articleCard.date}>{article.updatedDate}</span>
+        <section className={styles.info}>
+          <div className={styles.authInfo}>
+            <div className={styles.infoWrapper}>
+              <span className={styles.author}>{article.username}</span>
+              <span className={styles.date}>{article.updatedDate}</span>
             </div>
             {loading && <Spin style={{ position: 'absolute', right: '30px', top: '20px' }} />}
             <img
               alt="avatar"
               src={avatar}
-              className={articleCard.avatar}
+              className={styles.avatar}
               onLoad={() => {
                 setLoading(false)
               }}
@@ -105,7 +100,7 @@ function Article({ article }) {
             />
           </div>
           {location === 'article-page' && article.username === username && (
-            <ul className={articleCard.control}>
+            <ul className={styles.control}>
               <li>
                 <button className={deleteBtn} type="button" onClick={() => setModal(true)}>
                   Delete
@@ -121,12 +116,12 @@ function Article({ article }) {
         </section>
       </div>
       {/* eslint-disable-next-line react/no-children-prop */}
-      {location === 'article-page' && <ReactMarkdown children={article.text} className={articleCard.pageText} />}
+      {location === 'article-page' && <ReactMarkdown children={article.text} className={styles.pageText} />}
 
       {modal && (
-        <div className={articleCard.modal}>
-          <span className={articleCard.modalLabel}>Are you sure to delete this article?</span>
-          <div className={articleCard.modalBtns}>
+        <div className={styles.modal}>
+          <span className={styles.modalLabel}>Are you sure to delete this article?</span>
+          <div className={styles.modalBtns}>
             <button type="button" className={noBtn} onClick={() => setModal(false)}>
               No
             </button>

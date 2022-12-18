@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 
 import { registerUser } from '../../services/user-service'
-import { setErrors } from '../../store/user-slice'
+import { setErrors } from '../../store/slices/user-slice'
 
-import signUp from './sign-up.module.scss'
+import styles from './sign-up.module.scss'
 
 function SignUp() {
   const {
@@ -28,24 +28,24 @@ function SignUp() {
   }
 
   const navigate = useNavigate()
-  const home = useSelector((state) => state.user.home)
+  const home = useSelector((state) => state.status.home)
   useEffect(() => {
     dispatch(setErrors(null))
     if (home) navigate('/')
   }, [home, dispatch, navigate])
 
   return (
-    <div className={signUp.page}>
-      <form className={signUp.form} onSubmit={handleSubmit(onSubmit)}>
-        <h1 className={signUp.title}>Create new account</h1>
+    <div className={styles.page}>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <h1 className={styles.title}>Create new account</h1>
 
-        <ul className={signUp.inputsList}>
-          <li className={signUp.inputsItem}>
-            <label htmlFor="name" className={signUp.label}>
+        <ul className={styles.inputsList}>
+          <li className={styles.inputsItem}>
+            <label htmlFor="name" className={styles.label}>
               Username{' '}
             </label>
             <input
-              className={signUp.input}
+              className={styles.input}
               type="text"
               id="name"
               placeholder="Username"
@@ -64,19 +64,19 @@ function SignUp() {
               })}
             />
             {servErr?.username && (
-              <p className={signUp.error}>
+              <p className={styles.error}>
                 {user.username} {servErr?.username}
               </p>
             )}
-            {errors.username && <p className={signUp.error}>{errors.username.message}</p>}
+            {errors.username && <p className={styles.error}>{errors.username.message}</p>}
           </li>
 
-          <li className={signUp.inputsItem}>
-            <label htmlFor="email" className={signUp.label}>
+          <li className={styles.inputsItem}>
+            <label htmlFor="email" className={styles.label}>
               Email address{' '}
             </label>
             <input
-              className={signUp.input}
+              className={styles.input}
               type="text"
               id="email"
               placeholder="Email address"
@@ -93,19 +93,19 @@ function SignUp() {
               })}
             />
             {servErr?.email && (
-              <p className={signUp.error}>
+              <p className={styles.error}>
                 {user.email} {servErr?.email}
               </p>
             )}
-            {errors.email && <p className={signUp.error}>{errors.email.message}</p>}
+            {errors.email && <p className={styles.error}>{errors.email.message}</p>}
           </li>
 
-          <li className={signUp.inputsItem}>
-            <label htmlFor="password" className={signUp.label}>
+          <li className={styles.inputsItem}>
+            <label htmlFor="password" className={styles.label}>
               Password{' '}
             </label>
             <input
-              className={signUp.input}
+              className={styles.input}
               type="password"
               id="password"
               placeholder="Password"
@@ -122,15 +122,15 @@ function SignUp() {
                 },
               })}
             />
-            {errors.password && <p className={signUp.error}>{errors.password.message}</p>}
+            {errors.password && <p className={styles.error}>{errors.password.message}</p>}
           </li>
 
-          <li className={signUp.inputsItem}>
-            <label htmlFor="repeatPassword" className={signUp.label}>
+          <li className={styles.inputsItem}>
+            <label htmlFor="repeatPassword" className={styles.label}>
               Repeat Password{' '}
             </label>
             <input
-              className={signUp.input}
+              className={styles.input}
               type="password"
               id="repeatPassword"
               placeholder="Password"
@@ -143,13 +143,13 @@ function SignUp() {
                 },
               })}
             />
-            {errors.repeatPassword && <p className={signUp.error}>{errors.repeatPassword.message}</p>}
+            {errors.repeatPassword && <p className={styles.error}>{errors.repeatPassword.message}</p>}
           </li>
         </ul>
-        <div className={signUp.agreement}>
-          <label htmlFor="agreement" className={signUp.checkLabel}>
+        <div className={styles.agreement}>
+          <label htmlFor="agreement" className={styles.checkLabel}>
             <input
-              className={signUp.checkbox}
+              className={styles.checkbox}
               type="checkbox"
               id="agreement"
               name="agreement"
@@ -161,15 +161,15 @@ function SignUp() {
             I agree to the processing of my personal information
           </label>
         </div>
-        {errors.agreement && <p className={signUp.error}>{errors.agreement.message}</p>}
+        {errors.agreement && <p className={styles.error}>{errors.agreement.message}</p>}
 
-        <button type="submit" className={signUp.submit}>
+        <button type="submit" className={styles.submit}>
           Create
         </button>
 
-        <span className={signUp.signInLabel}>
+        <span className={styles.signInLabel}>
           Already have an account?{' '}
-          <Link className={signUp.signIn} to="/sign-in">
+          <Link className={styles.signIn} to="/sign-in">
             Sign In.
           </Link>
         </span>

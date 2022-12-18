@@ -5,6 +5,7 @@ const statusSlice = createSlice({
   initialState: {
     status: 'loading',
     location: 'articles-list',
+    home: false,
   },
   reducers: {
     setStatus(state, action) {
@@ -13,8 +14,11 @@ const statusSlice = createSlice({
     setLocation(state, action) {
       state.location = action.payload
     },
+    goHome(state, action) {
+      state.home = action.payload
+    },
   },
 })
 
 export default statusSlice.reducer
-export const { setStatus, setLocation } = statusSlice.actions
+export const { setStatus, setLocation, goHome } = statusSlice.actions

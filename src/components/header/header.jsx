@@ -3,16 +3,16 @@ import classNames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import { logOut } from '../../store/user-slice'
+import { logOut } from '../../store/slices/user-slice'
 import { getUser } from '../../services/user-service'
-import { addArticle } from '../../store/articles-slice'
+import { addArticle } from '../../store/slices/articles-slice'
 
-import header from './header.module.scss'
+import styles from './header.module.scss'
 
-const link = classNames(header.link)
-const signUp = classNames(link, header.signUp)
-const createArticle = classNames(link, header['create-article'])
-const logOutBtn = classNames(link, header['log-out'])
+const link = classNames(styles.link)
+const signUp = classNames(link, styles.signUp)
+const createArticle = classNames(link, styles['create-article'])
+const logOutBtn = classNames(link, styles['log-out'])
 
 function Header() {
   const dispatch = useDispatch()
@@ -32,7 +32,7 @@ function Header() {
   }, [])
 
   const headerAuthorization = (
-    <ul className={header.authorization}>
+    <ul className={styles.authorization}>
       <li>
         <Link className={link} to="/sign-in">
           Sign In
@@ -47,13 +47,13 @@ function Header() {
   )
 
   const headerMenu = (
-    <div className={header.menu}>
+    <div className={styles.menu}>
       <Link to="/new-article" onClick={addArticle({})} className={createArticle}>
         Create article
       </Link>
-      <Link to="/profile" className={header.user}>
-        <span className={header.userName}>{user.username}</span>
-        <img className={header.user__avatar} src={avatar} alt="avatar" />
+      <Link to="/profile" className={styles.user}>
+        <span className={styles.userName}>{user.username}</span>
+        <img className={styles.user__avatar} src={avatar} alt="avatar" />
       </Link>
       <Link to="/" className={logOutBtn} onClick={() => onLogOut()}>
         Log Out
@@ -62,8 +62,8 @@ function Header() {
   )
 
   return (
-    <div className={header.main}>
-      <Link to="/articles" className={header.label}>
+    <div className={styles.main}>
+      <Link to="/articles" className={styles.label}>
         Realworld Blog
       </Link>
       {token ? headerMenu : headerAuthorization}

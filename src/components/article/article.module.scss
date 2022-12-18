@@ -41,7 +41,6 @@
   max-width: 650px;
 }
 
-
 .blackLike {
   padding: 0;
   background-color: transparent;
@@ -53,7 +52,7 @@
   line-height: 22px;
 
   &:before {
-    content: url('./like.svg');
+    content: url('../../assets/like.svg');
     margin-top: 4px;
     margin-right: 5px;
   }
@@ -67,7 +66,7 @@
 
 .redLike {
   &:before {
-    content: url('./red-like.svg');
+    content: url('../../assets/red-like.svg');
   }
 }
 
@@ -235,7 +234,7 @@
   color: $grey-8;
 
   &:before {
-    content: url('./warning.svg');
+    content: url('../../assets/warning.svg');
     margin-right: 9px;
   }
 }

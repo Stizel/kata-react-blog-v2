@@ -14,7 +14,6 @@ const userSlice = createSlice({
           password: '',
         },
     errors: null,
-    home: false,
   },
   reducers: {
     logOut(state) {
@@ -34,11 +33,8 @@ const userSlice = createSlice({
     setErrors(state, action) {
       state.errors = action.payload
     },
-    goHome(state, action) {
-      state.home = action.payload
-    },
   },
 })
 
 export default userSlice.reducer
-export const { setUser, setErrors, logOut, goHome } = userSlice.actions
+export const { setUser, setErrors, logOut } = userSlice.actions

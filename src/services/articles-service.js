@@ -1,9 +1,8 @@
 import axios from 'axios'
 import { format } from 'date-fns'
 
-import { addArticle, addArticles, addArticlesCount, setLiked } from '../store/articles-slice'
-import { setStatus } from '../store/status-slice'
-import { goHome } from '../store/user-slice'
+import { addArticle, addArticles, addArticlesCount, setLiked } from '../store/slices/articles-slice'
+import { setStatus, goHome } from '../store/slices/status-slice'
 
 const baseUrl = 'https://blog.kata.academy/api'
 
