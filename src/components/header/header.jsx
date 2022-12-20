@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 
 import { logOut } from '../../store/slices/user-slice'
 import { getUser } from '../../services/user-service'
-import { addArticle } from '../../store/slices/articles-slice'
 
 import styles from './header.module.scss'
 
@@ -48,7 +47,7 @@ function Header() {
 
   const headerMenu = (
     <div className={styles.menu}>
-      <Link to="/new-article" onClick={addArticle({})} className={createArticle}>
+      <Link to="/new-article" className={createArticle}>
         Create article
       </Link>
       <Link to="/profile" className={styles.user}>

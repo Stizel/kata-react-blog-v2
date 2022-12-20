@@ -2,7 +2,7 @@ import axios from 'axios'
 import { format } from 'date-fns'
 
 import { addArticle, addArticles, addArticlesCount, setLiked } from '../store/slices/articles-slice'
-import { setStatus, goHome } from '../store/slices/status-slice'
+import { setStatus, goHome, setSubmit, setGoTo } from '../store/slices/status-slice'
 
 const baseUrl = 'https://blog.kata.academy/api'
 
@@ -55,37 +55,21 @@ export const fetchArticle =
       dispatch(setStatus('ok'))
     })
 
-export const postNewArticle = (data, tags, token) => async (dispatch) => {
-  const article = JSON.stringify({ article: { ...data, tagList: tags } })
-  return axios({
-    url: `${baseUrl}/articles`,
-    method: 'post',
-    headers: getHeaders(token),
-    data: article,
-  })
-    .then(() => {
-      dispatch(setStatus('ok'))
-      dispatch(goHome(true))
-    })
-    .catch(() => {
-      dispatch(setStatus('error'))
-    })
-}
-
 export const editArticle = (data, tags, token, slug) => async (dispatch) => {
   const article = JSON.stringify({ article: { ...data, tagList: tags } })
   return axios({
-    url: `${baseUrl}/articles/${slug}`,
-    method: 'put',
+    url: slug ? `${baseUrl}/articles/${slug}` : `${baseUrl}/articles`,
+    method: slug ? 'put' : 'post',
     headers: getHeaders(token),
     data: article,
   })
-    .then((res) => res.data)
-    .then(() => {
+    .then((res) => {
       dispatch(setStatus('ok'))
-      dispatch(goHome(true))
+      dispatch(setGoTo(res.data.article.slug))
+      dispatch(setSubmit(true))
     })
     .catch(() => {
+      dispatch(setSubmit(true))
       dispatch(setStatus('error'))
     })
 }
@@ -100,8 +84,10 @@ export const deleteArticle = (token, slug) => async (dispatch) =>
     .then(() => {
       dispatch(setStatus('ok'))
       dispatch(goHome(true))
+      dispatch(setSubmit(true))
     })
     .catch(() => {
+      dispatch(setSubmit(true))
       dispatch(setStatus('error'))
     })
 
@@ -116,5 +102,6 @@ export const setLike = (token, slug, liked) => async (dispatch) =>
       dispatch(setLiked(getArticleItem(res.data.article)))
     })
     .catch(() => {
+      dispatch(setSubmit(true))
       dispatch(setStatus('error'))
     })

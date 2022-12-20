@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid'
 import classNames from 'classnames'
 
 import { deleteArticle, fetchArticle, fetchArticles, setLike } from '../../services/articles-service'
+import { setGoTo } from '../../store/slices/status-slice'
 
 import styles from './article.module.scss'
 
@@ -27,6 +28,10 @@ function Article({ article }) {
   const title = article.title.length < 1 ? 'NO TITLED ARTICLE' : article.title
   const articlePath = `/articles/${article.slug}`
   const { page, limit } = useSelector((state) => state.articles)
+
+  useEffect(() => {
+    if (location === 'article-page') dispatch(setGoTo(''))
+  }, [])
 
   useEffect(() => {
     setAvatar(article.avatarPath)

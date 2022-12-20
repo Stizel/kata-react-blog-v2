@@ -6,14 +6,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 
 import Tag from '../tag/tag'
-import { editArticle, fetchArticle, postNewArticle } from '../../services/articles-service'
+import { editArticle } from '../../services/articles-service'
 import { setErrors } from '../../store/slices/user-slice'
 import { createTags } from '../../store/slices/tags-slice'
+import { setSubmit } from '../../store/slices/status-slice'
 
 import styles from './new-article.module.scss'
 
 const areaStyle = classNames(styles.input, styles.textarea)
-const sendBtn = classNames(styles.btn, styles.send)
 
 function NewArticle() {
   const dispatch = useDispatch()
@@ -24,8 +24,11 @@ function NewArticle() {
   const { articles } = useSelector((state) => state.articles)
   const article = articles.find((item) => item.slug === slug)
   const { tags } = useSelector((state) => state.tags)
-  const { token } = useSelector((state) => state.user.user)
-  const home = useSelector((state) => state.status.home)
+  const { token, username } = useSelector((state) => state.user.user)
+  const { home, submitActive, goTo } = useSelector((state) => state.status)
+  const sendBtn = submitActive
+    ? classNames(styles.btn, styles.send)
+    : classNames(styles.btn, styles.send, styles.disabledBtn)
 
   const tagz = tags.map((tag, idx) => (
     <li key={tag.id} className={styles.tagWrapper}>
@@ -42,18 +45,24 @@ function NewArticle() {
   const sendTags = tags.map((tag) => tag.label).filter((tag) => tag !== '')
 
   const onSubmit = (data) => {
+    dispatch(setSubmit(false))
     // eslint-disable-next-line no-unused-expressions
-    slug ? dispatch(editArticle(data, sendTags, token, slug)) : dispatch(postNewArticle(data, sendTags, token))
+    slug ? dispatch(editArticle(data, sendTags, token, slug)) : dispatch(editArticle(data, sendTags, token))
   }
   const memToken = useMemo(() => token, [])
 
   useEffect(() => {
+    if (goTo) navigate(`/articles/${goTo}`)
+  }, [goTo])
+
+  useEffect(() => {
+    if (slug && article?.username !== username) navigate('/')
     if (!memToken) navigate('/')
     if (home) navigate('/')
-    if (slug) dispatch(fetchArticle(slug))
     dispatch(setErrors(null))
   }, [home, dispatch, navigate, memToken, slug])
 
+  // ///////////////////tags////////////////////////////////////
   useEffect(() => {
     if (slug && article && Object.keys(article).length > 0) {
       const newTags = []
@@ -132,7 +141,7 @@ function NewArticle() {
             </label>
           </li>
         </ul>
-        <button type="submit" className={sendBtn}>
+        <button type="submit" className={sendBtn} disabled={!submitActive}>
           Send
         </button>
       </form>

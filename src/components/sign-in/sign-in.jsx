@@ -2,10 +2,12 @@ import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
+import classNames from 'classnames'
 
-import { loginUser } from '../../services/user-service'
+import { registerUser } from '../../services/user-service'
 import { setErrors } from '../../store/slices/user-slice'
 import signUp from '../sign-up/sign-up.module.scss'
+import { setSubmit } from '../../store/slices/status-slice'
 
 import styles from './sign-in.module.scss'
 
@@ -23,7 +25,8 @@ function SignIn() {
   const dispatch = useDispatch()
 
   const onSubmit = (data) => {
-    dispatch(loginUser(data))
+    dispatch(setSubmit(false))
+    dispatch(registerUser(data, true))
   }
 
   const navigate = useNavigate()
@@ -32,6 +35,9 @@ function SignIn() {
     dispatch(setErrors(null))
     if (home) navigate('/')
   }, [home, dispatch, navigate])
+
+  const { submitActive } = useSelector((state) => state.status)
+  const submit = submitActive ? styles.submit : classNames(styles.submit, styles.disabledBtn)
 
   return (
     <div className={styles.page}>
@@ -84,7 +90,7 @@ function SignIn() {
           </li>
         </ul>
 
-        <button type="submit" className={styles.submit}>
+        <button type="submit" className={submit} disabled={!submitActive}>
           Sign In
         </button>
 

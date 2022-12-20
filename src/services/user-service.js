@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import { setErrors, setUser } from '../store/slices/user-slice'
-import { goHome } from '../store/slices/status-slice'
+import { goHome, setSubmit } from '../store/slices/status-slice'
 
 const baseUrl = 'https://blog.kata.academy/api'
 
@@ -35,22 +35,25 @@ export const getUser = (token) => async (dispatch) => {
     })
 }
 
-export const registerUser = (data) => async (dispatch) => {
+export const registerUser = (data, login) => async (dispatch) => {
   const user = JSON.stringify({
     user: data,
   })
 
   fetchUser({
-    url: '/users',
+    url: login ? '/users/login' : '/users',
     data: user,
   })
     .then((res) => {
-      dispatch(getUser(res.data.user.token))
+      localStorage.setItem('user', JSON.stringify(res.data.user))
+      dispatch(setUser({ user: res.data.user }))
       dispatch(setErrors(null))
       dispatch(goHome(true))
+      dispatch(setSubmit(true))
     })
     .catch((err) => {
       if (err?.response?.status === 422) {
+        dispatch(setSubmit(true))
         dispatch(setUser(JSON.parse(user)))
         dispatch(setErrors(err.response.data.errors))
       }
@@ -66,11 +69,14 @@ export const loginUser = (data) => async (dispatch) => {
     data: user,
   })
     .then((res) => {
-      dispatch(getUser(res.data.user.token))
+      localStorage.setItem('user', JSON.stringify(res.data.user))
+      dispatch(setUser({ user: res.data.user }))
       dispatch(setErrors(null))
       dispatch(goHome(true))
+      dispatch(setSubmit(true))
     })
     .catch((err) => {
+      dispatch(setSubmit(true))
       if (err.response.status === 422) {
         dispatch(setUser(JSON.parse(user)))
         dispatch(setErrors(err.response.data.errors))
@@ -92,10 +98,13 @@ export const updateUser = (data) => async (dispatch) => {
     data: user,
   })
     .then((res) => {
-      dispatch(getUser(res.data.user.token))
+      localStorage.setItem('user', JSON.stringify(res.data.user))
+      dispatch(setUser({ user: res.data.user }))
       dispatch(setErrors(null))
+      dispatch(setSubmit(true))
     })
     .catch((err) => {
+      dispatch(setSubmit(true))
       dispatch(setErrors(err.response.data.errors))
     })
 }

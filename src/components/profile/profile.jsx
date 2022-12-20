@@ -1,9 +1,11 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
+import classNames from 'classnames'
 
 import { updateUser } from '../../services/user-service'
 import signUp from '../sign-up/sign-up.module.scss'
+import { setSubmit } from '../../store/slices/status-slice'
 
 import styles from './profile.module.scss'
 
@@ -18,7 +20,13 @@ function Profile() {
   const dispatch = useDispatch()
   const servErr = useSelector((state) => state.user.errors)
 
-  const onSubmit = (data) => dispatch(updateUser(data))
+  const onSubmit = (data) => {
+    dispatch(setSubmit(false))
+    dispatch(updateUser(data))
+  }
+
+  const { submitActive } = useSelector((state) => state.status)
+  const submit = submitActive ? styles.submit : classNames(styles.submit, styles.disabledBtn)
 
   return (
     <div className={styles.page}>
@@ -132,7 +140,7 @@ function Profile() {
           </li>
         </ul>
 
-        <button type="submit" className={styles.submit}>
+        <button type="submit" className={submit} disabled={!submitActive}>
           Save
         </button>
       </form>

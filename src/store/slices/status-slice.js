@@ -6,8 +6,16 @@ const statusSlice = createSlice({
     status: 'loading',
     location: 'articles-list',
     home: false,
+    submitActive: true,
+    goTo: '',
   },
   reducers: {
+    setGoTo(state, action) {
+      state.goTo = action.payload
+    },
+    setSubmit(state, action) {
+      state.submitActive = action.payload
+    },
     setStatus(state, action) {
       state.status = action.payload
     },
@@ -21,4 +29,4 @@ const statusSlice = createSlice({
 })
 
 export default statusSlice.reducer
-export const { setStatus, setLocation, goHome } = statusSlice.actions
+export const { setStatus, setLocation, goHome, setSubmit, setGoTo } = statusSlice.actions

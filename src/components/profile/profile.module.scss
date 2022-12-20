@@ -94,3 +94,15 @@
   height: 46px;
   width: 46px;
 }
+
+.disabledBtn {
+  color: $white;
+  background-color: $grey-5;
+  border: 1px transparent solid;
+
+  &:hover {
+    border: 1px $grey-5 solid;
+    background-color: $grey-5;
+    color: $white;
+  }
+}
