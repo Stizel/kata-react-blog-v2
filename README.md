@@ -1,1 +1,1 @@
-<a href="kata-react-blog-v2.vercel.app">Блог</a>
+<a href="https://kata-react-blog-v2.vercel.app/">Блог</a>
